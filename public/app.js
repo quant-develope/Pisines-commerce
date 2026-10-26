@@ -32,7 +32,9 @@ const T = {
     fixedTotal: 'Указать итоговую цену вручную (без цен по материалам)', fixedNet: 'Итоговая цена без НДС, €', fixedHint: 'НДС добавится сам. В PDF будут позиции без цен и итог.',
     chooseTemplate: 'Выберите шаблон', chooseTemplateHint: 'Состав и подзаголовок подставятся из шаблона. Позиции можно добавлять и удалять, но только в этом предложении: шаблон не меняется.', emptyTemplate: 'Новое предложение (заполнить самостоятельно)', emptyTemplateHint: 'Без позиций: добавьте их сами кнопкой «+ Добавить позицию»', continueDraft: 'Продолжить начатое', positions: 'позиций',
     saveAsTemplate: 'Сохранить состав как шаблон', tplOverwrite: 'Заменить шаблон', tplNew: 'Новый шаблон', tplName: 'Название шаблона', tplSaved: 'Шаблон сохранён', templates: 'Шаблоны', tplDelete: 'Удалить шаблон', template: 'Шаблон',
-    pdfLang: 'Язык PDF', pdfSign: 'Подпись в PDF', signShort: 'Подпись', english: 'Английский (для PDF на EN)', nameEn: 'Название (англ.) — для PDF на английском', descEn: 'Описание для PDF на английском', subtitleOffer: 'Подзаголовок (греч.)', subtitleEn: 'Подзаголовок (англ.)',
+    pdfLang: 'Язык PDF', pdfSign: 'Подпись в PDF', fmtEdit: '✎ Изменить', fmtDone: 'Готово', fmtReset: 'Вернуть как было', fmtHint: 'Правки только для этого предложения и для PDF на {L}. Каталог и шаблоны не меняются.', fmtLangs: { el: 'греческом', en: 'английском' },
+    fmtTitle: 'Заголовок', fmtSubtitle: 'Подзаголовок', fmtNote: 'Примечание (под данными клиента)', fmtShow: 'Показывать в PDF', secPool: 'Бассейн', secDescr: 'Описание материалов', secPhotos: 'Фото материалов', secTerms: 'Условия', secNotIncl: '«Не включено в цену»',
+    fmtItems: 'Позиции', fmtName: 'Название', fmtDesc: 'Описание (пустая строка = новый абзац)', signShort: 'Подпись', english: 'Английский (для PDF на EN)', nameEn: 'Название (англ.) — для PDF на английском', descEn: 'Описание для PDF на английском', subtitleOffer: 'Подзаголовок (греч.)', subtitleEn: 'Подзаголовок (англ.)',
   },
   el: {
     appName: 'Οικονομικές προσφορές', tabOffer: 'Προσφορά', tabMaterials: 'Υλικά', tabArchive: 'Αρχείο', tabSettings: 'Ρυθμίσεις',
@@ -62,7 +64,9 @@ const T = {
     fixedTotal: 'Συνολική τιμή χειροκίνητα (χωρίς τιμές ανά υλικό)', fixedNet: 'Συνολική τιμή χωρίς ΦΠΑ, €', fixedHint: 'Ο ΦΠΑ προστίθεται αυτόματα. Στο PDF εμφανίζονται οι θέσεις χωρίς τιμές και το σύνολο.',
     chooseTemplate: 'Επιλέξτε πρότυπο', chooseTemplateHint: 'Το περιεχόμενο και ο υπότιτλος έρχονται από το πρότυπο. Οι αλλαγές ισχύουν μόνο για αυτή την προσφορά: το πρότυπο δεν αλλάζει.', emptyTemplate: 'Νέα προσφορά (συμπλήρωση από την αρχή)', emptyTemplateHint: 'Χωρίς θέσεις: προσθέστε τις με «+ Προσθήκη θέσης»', continueDraft: 'Συνέχεια της τρέχουσας', positions: 'θέσεις',
     saveAsTemplate: 'Αποθήκευση ως πρότυπο', tplOverwrite: 'Αντικατάσταση προτύπου', tplNew: 'Νέο πρότυπο', tplName: 'Όνομα προτύπου', tplSaved: 'Το πρότυπο αποθηκεύτηκε', templates: 'Πρότυπα', tplDelete: 'Διαγραφή προτύπου', template: 'Πρότυπο',
-    pdfLang: 'Γλώσσα PDF', pdfSign: 'Υπογραφή στο PDF', signShort: 'Υπογρ.', english: 'Αγγλικά (για PDF στα αγγλικά)', nameEn: 'Όνομα (αγγλικά) — για PDF στα αγγλικά', descEn: 'Περιγραφή για PDF στα αγγλικά', subtitleOffer: 'Υπότιτλος (ελληνικά)', subtitleEn: 'Υπότιτλος (αγγλικά)',
+    pdfLang: 'Γλώσσα PDF', pdfSign: 'Υπογραφή στο PDF', fmtEdit: '✎ Επεξεργασία', fmtDone: 'Έτοιμο', fmtReset: 'Επαναφορά', fmtHint: 'Οι αλλαγές ισχύουν μόνο για αυτή την προσφορά και για το PDF στα {L}. Ο κατάλογος και τα πρότυπα δεν αλλάζουν.', fmtLangs: { el: 'ελληνικά', en: 'αγγλικά' },
+    fmtTitle: 'Τίτλος', fmtSubtitle: 'Υπότιτλος', fmtNote: 'Σημείωση (κάτω από τα στοιχεία πελάτη)', fmtShow: 'Εμφάνιση στο PDF', secPool: 'Πισίνα', secDescr: 'Περιγραφή υλικών', secPhotos: 'Φωτογραφίες υλικών', secTerms: 'Όροι', secNotIncl: '«Δεν περιλαμβάνονται»',
+    fmtItems: 'Θέσεις', fmtName: 'Όνομα', fmtDesc: 'Περιγραφή (κενή γραμμή = νέα παράγραφος)', signShort: 'Υπογρ.', english: 'Αγγλικά (για PDF στα αγγλικά)', nameEn: 'Όνομα (αγγλικά) — για PDF στα αγγλικά', descEn: 'Περιγραφή για PDF στα αγγλικά', subtitleOffer: 'Υπότιτλος (ελληνικά)', subtitleEn: 'Υπότιτλος (αγγλικά)',
   },
 };
 const UNIT_EL = { pcs: 'τεμ.', set: 'σετ', m: 'm', m2: 'm²', perim: 'm', area: 'm²' };
@@ -471,6 +475,15 @@ function warEn(w) {
   if (m) return `${m[1]} ${+m[1] === 1 ? 'year' : 'years'}`;
   return w || '—';
 }
+const paras = (txt) => String(txt).split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
+// catalogue name and description of a line in the PDF language, before any one-off edit
+function lineText(l, L, color) {
+  const m = matById(l.matId) || l.snap || {}, EN = L === 'en';
+  return {
+    name: EN ? (m.en || m.el || '') : (m.el || ''),
+    paras: ((EN && m.desc_en && m.desc_en.length) ? m.desc_en : (m.desc_el || [])).map((x) => x.replace(/\{color\}/g, color || '')),
+  };
+}
 async function buildDoc(o, L = 'el', withSign = false) {
   const P = PDF_T[L], EN = L === 'en';
   const s = DB.settings, c = totals(o), pc = c.pc;
@@ -482,17 +495,20 @@ async function buildDoc(o, L = 'el', withSign = false) {
   const items = [];
   ['A', 'B', 'C'].forEach((g) => DB.categories.filter((cat) => cat.group === g).forEach((cat) => o.lines.filter((l) => l.category === cat.id).forEach((l) => items.push({ l, g }))));
   o.lines.filter((l) => !items.some((x) => x.l === l)).forEach((l) => items.push({ l, g: 'C' }));
+  // one-off edits made in the preview («Изменить»): o.fmt[L] texts, o.fmt.hide sections, o.fmt.lines[key][L] names/descriptions
+  const F = o.fmt || {}, FL = F[L] || {}, HIDE = F.hide || {};
   for (const it of items) {
     const m = matById(it.l.matId) || it.l.snap || {};
-    it.m = m; it.img = await dataUrl(m.image);
-    it.name = EN ? (m.en || m.el || '') : (m.el || '');
-    it.paras = ((EN && m.desc_en && m.desc_en.length) ? m.desc_en : (m.desc_el || [])).map((x) => x.replace(/\{color\}/g, color || ''));
+    const def = lineText(it.l, L, color), ov = ((F.lines || {})[it.l.key] || {})[L] || {};
+    it.m = m; it.img = HIDE.photos ? null : await dataUrl(m.image);
+    it.name = ov.name ?? def.name;
+    it.paras = ov.desc != null ? paras(ov.desc) : def.paras;
   }
   items.forEach((it, i) => { it.n = i + 1; });
   const subtitle = EN ? (o.subtitle_en || s.subtitle_en || '') : (o.subtitle_el ?? s.subtitle ?? '');
   const content = [];
-  content.push({ text: P.title, fontSize: 20, bold: true, color: NAVY });
-  content.push({ text: subtitle, color: GREY, fontSize: 11, margin: [0, 0, 0, 10] });
+  content.push({ text: FL.title || P.title, fontSize: 20, bold: true, color: NAVY });
+  content.push({ text: FL.subtitle ?? subtitle, color: GREY, fontSize: 11, margin: [0, 0, 0, 10] });
   content.push({ table: { widths: [70, '*', 65, '*'], body: [
     [...kv(P.no, o.no), ...kv(P.date, fmtDate(o.date))],
     [...kv(P.client, o.client), ...kv(P.phone, o.phone)],
@@ -501,17 +517,21 @@ async function buildDoc(o, L = 'el', withSign = false) {
   const d = (n, k = 1) => (EN ? n.toLocaleString('en-GB', { minimumFractionDigits: k, maximumFractionDigits: 2 }) : dec(n, k));
   const mon = (n) => (EN ? (Math.round(n * 100) / 100).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : money(n));
   // owner's order: pool → materials with photos → terms → what the offer includes (prices) → acceptance
+  if (FL.note) content.push({ text: FL.note, fontSize: 9, margin: [0, 10, 0, 0] });
   let sec = 0;
-  content.push(heading(String(++sec), P.pool));
-  const depth = pc.a === pc.b ? `${d(pc.mean, 2)} m` : `${d(pc.mean, 2)} m (${d(pc.a, 2)} – ${d(pc.b, 2)} m)`;
-  content.push({ table: { widths: [150, '*'], body: [
-    kv(P.shape, `${P.rect} ${d(pc.L)} × ${d(pc.W)} m`), kv(P.depth, depth),
-    kv(P.area, `${d(pc.area)} m²`), kv(P.vol, `${d(pc.vol)} m³`),
-    kv(P.turn, `${d(num(o.pool.turn))} ${P.hours}`), kv(P.color, color),
-  ] }, layout: lay });
+  if (!HIDE.pool) {
+    content.push(heading(String(++sec), P.pool));
+    const depth = pc.a === pc.b ? `${d(pc.mean, 2)} m` : `${d(pc.mean, 2)} m (${d(pc.a, 2)} – ${d(pc.b, 2)} m)`;
+    content.push({ table: { widths: [150, '*'], body: [
+      kv(P.shape, `${P.rect} ${d(pc.L)} × ${d(pc.W)} m`), kv(P.depth, depth),
+      kv(P.area, `${d(pc.area)} m²`), kv(P.vol, `${d(pc.vol)} m³`),
+      kv(P.turn, `${d(num(o.pool.turn))} ${P.hours}`), kv(P.color, color),
+    ] }, layout: lay });
+  }
 
-  const inclNo = (items.some((it) => it.paras.length || it.img) ? 4 : 3);
-  const described = items.filter((it) => it.paras.length || it.img);
+  const showDescr = !HIDE.descr && items.some((it) => it.paras.length || it.img);
+  const inclNo = sec + (showDescr ? 1 : 0) + (HIDE.terms ? 0 : 1) + 1;
+  const described = showDescr ? items.filter((it) => it.paras.length || it.img) : [];
   if (described.length) {
     content.push(heading(String(++sec), P.descr));
     content.push({ text: P.descrHint.replace('{n}', inclNo), fontSize: 8, color: GREY, margin: [0, 0, 0, 8] });
@@ -524,17 +544,19 @@ async function buildDoc(o, L = 'el', withSign = false) {
       content.push({ table: { widths: ['*', 150], body: [row] }, layout: lay, unbreakable: true, margin: [0, 0, 0, 7] });
     });
   }
-  content.push(heading(String(++sec), P.terms));
-  content.push({ table: { widths: [150, '*'], body: [
-    kv(P.valid, `${o.terms.validDays} ${P.days}`), kv(P.delivery, term(o.terms.delivery, 'delivery')),
-    kv(P.place, term(o.terms.place, 'place')), kv(P.payment, term(o.terms.payment, 'payment')),
-  ] }, layout: lay });
-  if (o.terms.notIncluded) {
-    content.push({ text: P.notIncl, bold: true, margin: [0, 8, 0, 2] });
-    content.push({ text: term(o.terms.notIncluded, 'notIncluded'), fontSize: 8.5 });
+  if (!HIDE.terms) {
+    content.push(heading(String(++sec), P.terms));
+    content.push({ table: { widths: [150, '*'], body: [
+      kv(P.valid, `${o.terms.validDays} ${P.days}`), kv(P.delivery, term(o.terms.delivery, 'delivery')),
+      kv(P.place, term(o.terms.place, 'place')), kv(P.payment, term(o.terms.payment, 'payment')),
+    ] }, layout: lay });
+    if (o.terms.notIncluded && !HIDE.notIncl) {
+      content.push({ text: P.notIncl, bold: true, margin: [0, 8, 0, 2] });
+      content.push({ text: term(o.terms.notIncluded, 'notIncluded'), fontSize: 8.5 });
+    }
   }
-  ++sec;
-  content.push({ ...heading(String(inclNo), P.incl), pageBreak: 'before' }); // price table + acceptance together on fresh pages
+  sec = inclNo;
+  content.push({ ...heading(String(inclNo), P.incl), ...(showDescr ? { pageBreak: 'before' } : {}) }); // price table + acceptance together on fresh pages
   const H = (x, al) => ({ text: x, bold: true, color: '#ffffff', fillColor: NAVY, fontSize: 8, alignment: al });
   // no price column when the total is typed by hand or no line has a price; lines without a price print «—»
   const priced = o.lines.some((l) => hasNum(l.price));
@@ -614,7 +636,7 @@ async function openPreview() {
 }
 function closePreview(fromHistory) {
   if ($('#pv').hidden) return;
-  $('#pv').hidden = true; document.body.style.overflow = ''; pv = null; pvRun++;
+  closeFmt(); $('#pv').hidden = true; document.body.style.overflow = ''; pv = null; pvRun++;
   $('#pvPages').innerHTML = '';
   if (!fromHistory && history.state && history.state.pv) history.back();
 }
@@ -657,9 +679,73 @@ async function pvShare() {
   try { await navigator.share({ files: [file], title: pv.name }); }
   catch (e) { if (e.name !== 'AbortError') toast(String(e.message || e), true); }
 }
+// One-off formatting of this offer's PDF: texts per PDF language, sections on/off. Stored in offer.fmt.
+function pdfLines(o) {
+  const out = [];
+  ['A', 'B', 'C'].forEach((g) => DB.categories.filter((c) => c.group === g).forEach((c) => o.lines.filter((l) => l.category === c.id).forEach((l) => out.push(l))));
+  o.lines.filter((l) => !out.includes(l)).forEach((l) => out.push(l));
+  return out;
+}
+function openFmt() {
+  const o = offer, L = store.get('pdfLang', 'el'), EN = L === 'en';
+  const F = o.fmt || {}, FL = F[L] || {}, HIDE = F.hide || {}, P = PDF_T[L], s = DB.settings;
+  const color = EN ? (COLOR_EN[o.pool.color] || o.pool.color) : o.pool.color;
+  const sub = EN ? (o.subtitle_en || s.subtitle_en || '') : (o.subtitle_el ?? s.subtitle ?? '');
+  const chk = (k, label) => `<label class="check"><input type="checkbox" data-show="${k}" ${HIDE[k] ? '' : 'checked'}>${esc(label)}</label>`;
+  const lines = pdfLines(o).filter((l) => matById(l.matId) || l.snap);
+  $('#pvEdit').innerHTML = `<div class="pv-form">
+    <p class="hint">${esc(t('fmtHint').replace('{L}', T[lang].fmtLangs[L]))}</p>
+    <section class="card"><div class="grid">
+      <label class="f full">${esc(t('fmtTitle'))}<input id="fx_title" value="${esc(FL.title || P.title)}"></label>
+      <label class="f full">${esc(t('fmtSubtitle'))}<input id="fx_sub" value="${esc(FL.subtitle ?? sub)}"></label>
+      <label class="f full">${esc(t('fmtNote'))}<textarea id="fx_note" rows="3">${esc(FL.note || '')}</textarea></label>
+    </div></section>
+    <section class="card"><h2>${esc(t('fmtShow'))}</h2>
+      ${chk('pool', t('secPool'))}${chk('descr', t('secDescr'))}${chk('photos', t('secPhotos'))}${chk('terms', t('secTerms'))}${chk('notIncl', t('secNotIncl'))}
+    </section>
+    <section class="card"><h2>${esc(t('fmtItems'))}</h2>
+      ${lines.map((l, i) => { const def = lineText(l, L, color), ov = ((F.lines || {})[l.key] || {})[L] || {};
+        return `<div class="grid fx-line" data-key="${esc(l.key)}">
+          <label class="f full"><span><b>${i + 1}.</b> ${esc(t('fmtName'))}</span><input data-fx="name" value="${esc(ov.name ?? def.name)}"></label>
+          <label class="f full">${esc(t('fmtDesc'))}<textarea data-fx="desc" rows="4">${esc(ov.desc ?? def.paras.join('\n\n'))}</textarea></label></div>`; }).join('')}
+    </section>
+    <div class="row pv-form-bar"><button class="btn" id="fx_reset" type="button">${esc(t('fmtReset'))}</button><button class="btn main" id="fx_done" type="button">${esc(t('fmtDone'))}</button></div>
+  </div>`;
+  $('#pvPages').hidden = true; $('#pvBot').hidden = true; $('#pvEdit').hidden = false; $('#pvEdit').scrollTop = 0;
+  $('#fx_reset').onclick = () => {
+    const nf = structuredClone(o.fmt || {}); delete nf[L]; delete nf.hide;
+    Object.values(nf.lines || {}).forEach((x) => { delete x[L]; });
+    o.fmt = nf; saveDraft(); openFmt();
+  };
+  $('#fx_done').onclick = () => {
+    // keep only what differs from the catalogue / defaults, so later catalogue edits still show up
+    const nf = structuredClone(o.fmt || {}), cur = {};
+    const title = $('#fx_title').value.trim(), subv = $('#fx_sub').value, note = $('#fx_note').value.trim();
+    if (title && title !== P.title) cur.title = title;
+    if (subv !== sub) cur.subtitle = subv;
+    if (note) cur.note = note;
+    nf[L] = cur;
+    nf.hide = {}; $$('[data-show]').forEach((c) => { if (!c.checked) nf.hide[c.dataset.show] = true; });
+    nf.lines = nf.lines || {};
+    $$('.fx-line').forEach((row) => {
+      const l = o.lines.find((x) => x.key === row.dataset.key); if (!l) return;
+      const def = lineText(l, L, color), ov = {};
+      const name = $('[data-fx=name]', row).value.trim(), desc = $('[data-fx=desc]', row).value.trim();
+      if (name && name !== def.name) ov.name = name;
+      if (desc !== def.paras.join('\n\n')) ov.desc = desc;
+      nf.lines[l.key] = { ...(nf.lines[l.key] || {}), [L]: ov };
+      if (!Object.keys(ov).length) delete nf.lines[l.key][L];
+    });
+    o.fmt = nf; saveDraft(); saveOffer(true).catch(() => {});
+    closeFmt(); renderPreview();
+  };
+}
+function closeFmt() { $('#pvEdit').hidden = true; $('#pvEdit').innerHTML = ''; $('#pvPages').hidden = false; $('#pvBot').hidden = false; }
+
 function initPreview() {
+  $('#pvEditBtn').onclick = () => ($('#pvEdit').hidden ? openFmt() : (closeFmt(), renderPreview()));
   $('#pvClose').onclick = () => closePreview();
-  $$('[data-pvlang]').forEach((b) => b.addEventListener('click', () => { store.set('pdfLang', b.dataset.pvlang); renderPreview(); }));
+  $$('[data-pvlang]').forEach((b) => b.addEventListener('click', () => { store.set('pdfLang', b.dataset.pvlang); if (!$('#pvEdit').hidden) openFmt(); renderPreview(); }));
   $('#pvSign').onchange = (e) => { store.set('pdfSign', e.target.checked); renderPreview(); };
   $('#pvDl').onclick = () => { pvDownload(); toast(t('pdfReady')); };
   $('#pvShare').onclick = () => (canShareFiles() ? pvShare() : (pvDownload(), toast(t('pdfReady'))));

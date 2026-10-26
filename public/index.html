@@ -35,12 +35,14 @@
 <div class="toast" id="toast" role="status" hidden></div>
 <div class="pv" id="pv" hidden role="dialog" aria-modal="true">
   <div class="pv-top">
-    <button class="btn small" id="pvClose" type="button" aria-label="Close">✕</button>
+    <div class="row"><button class="btn small" id="pvClose" type="button" aria-label="Close">✕</button>
+      <button class="btn small" id="pvEditBtn" type="button" data-t="fmtEdit"></button></div>
     <div class="pv-opts"><label class="signtog" id="pvSignBox"><input type="checkbox" id="pvSign"><span data-t="signShort"></span></label>
       <div class="lang"><button type="button" data-pvlang="el">ΕΛ</button><button type="button" data-pvlang="en">EN</button></div></div>
   </div>
   <div class="pv-pages" id="pvPages"></div>
-  <div class="pv-bot">
+  <div class="pv-edit" id="pvEdit" hidden></div>
+  <div class="pv-bot" id="pvBot">
     <button class="btn" id="pvDl" type="button" data-t="download"></button>
     <button class="btn main" id="pvShare" type="button" data-t="sendApps"></button>
   </div>
