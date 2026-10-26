@@ -5,7 +5,7 @@ import { DurableObject } from 'cloudflare:workers';
 import { SEED_CATEGORIES, SEED_MATERIALS, SEED_SETTINGS, SEED_EN, SEED_TEMPLATES, SEED_SETTINGS_EN } from './seed.js';
 import { PREV_DESC } from './seed_prev.js';
 
-const SEED_VERSION = 5;
+const SEED_VERSION = 6;
 
 const json = (data, status = 200) => new Response(JSON.stringify(data), {
   status, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' },
@@ -110,6 +110,12 @@ export class Store extends DurableObject {
       if (!(await S.get('mat:aquark'))) await S.put('mat:aquark', { ...SEED_MATERIALS.find((x) => x.id === 'aquark'), order: SEED_MATERIALS.length + 1 });
       const settings = (await S.get('settings')) || {};
       (settings.templates || []).forEach((t) => { t.materials = t.materials.map((x) => (x === 'phpump' ? 'aquark' : x && x.id === 'phpump' ? { ...x, id: 'aquark' } : x)); });
+      await S.put('settings', settings);
+    }
+    if (v < 6) {
+      // owner changed their mind: Hayward is the default again, Mr. Pure is picked from the same dropdown
+      const settings = (await S.get('settings')) || {};
+      (settings.templates || []).forEach((t) => { t.materials = t.materials.map((x) => (x === 'aquark' ? 'phpump' : x && x.id === 'aquark' ? { ...x, id: 'phpump' } : x)); });
       await S.put('settings', settings);
     }
     await S.put('seedVersion', SEED_VERSION);

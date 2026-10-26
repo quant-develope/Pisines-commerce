@@ -159,13 +159,13 @@ export const SEED_TEMPLATES = [
     materials: ['panels15', 'liner15', 'equip', 'f400', 'kse15', 'grate', tq('inlets', 3), 'vacinlet', tq('led', 1), 'skimmer', 'vacuum', 'net', 'pole', 'hose', 'testkit', 'muro', 'elpanel', 'turbo'] },
   { id: 'hydro_salt', ru: 'С гидромассажем и электролизом соли', el: 'Πισίνα με υδρομασάζ και ηλεκτρόλυση',
     subtitle_el: 'Πισίνα με ηλεκτρόλυση άλατος', subtitle_en: 'Pool with salt electrolysis',
-    materials: [...LINING, 'salt', 'aquark', 'elpanel', 'karpa'] },
+    materials: [...LINING, 'salt', 'phpump', 'elpanel', 'karpa'] },
   { id: 'hydro_heat', ru: 'С гидромассажем, тепловым насосом Inverter и противотоком', el: 'Πισίνα με υδρομασάζ, αντλία θερμότητας και αντίθετη κολύμβηση',
     subtitle_el: 'Πισίνα με αντλία θερμότητας Inverter και σύστημα αντίθετης κολύμβησης', subtitle_en: 'Pool with Inverter heat pump and counter-current system',
-    materials: [...LINING, 'salt', 'aquark', 'elpanel', 'heatpump', 'counter'] },
+    materials: [...LINING, 'salt', 'phpump', 'elpanel', 'heatpump', 'counter'] },
   { id: 'relining', ru: 'Облицовка бассейна мембраной (liner)', el: 'Επένδυση πισίνας liner',
     subtitle_el: 'Επένδυση πισίνας με μεμβράνη liner', subtitle_en: 'Pool lining with PVC liner membrane',
-    materials: ['liner15', 'equip', 'f640', 'marble', 'kse07', 'grate', tq('inlets', 3), 'vacinlet', tq('led', 2), 'vacuum', 'net', 'pole', 'hose', 'testkit', 'salt', 'aquark', 'elpanel', 'heatpump'] },
+    materials: ['liner15', 'equip', 'f640', 'marble', 'kse07', 'grate', tq('inlets', 3), 'vacinlet', tq('led', 2), 'vacuum', 'net', 'pole', 'hose', 'testkit', 'salt', 'phpump', 'elpanel', 'heatpump'] },
 ];
 
 export const SEED_SETTINGS_EN = {
