@@ -30,7 +30,7 @@ const T = {
     defaults: 'Условия по умолчанию', colors: 'Цвета мембраны (через запятую)', nextNo: 'Следующий номер', changePin: 'Сменить PIN', newPin: 'Новый PIN', saveSettings: 'Сохранить настройки', logout: 'Выйти на этом телефоне',
     netErr: 'Нет связи с сервером. Изменения сохранены на телефоне.', unsavedPrice: 'нет цены',
     fixedTotal: 'Указать итоговую цену вручную (без цен по материалам)', fixedNet: 'Итоговая цена без НДС, €', fixedHint: 'НДС добавится сам. В PDF будут позиции без цен и итог.',
-    chooseTemplate: 'Выберите шаблон', chooseTemplateHint: 'Состав и подзаголовок подставятся из шаблона. Потом всё можно поменять.', emptyTemplate: 'Без шаблона (только позиции «по умолчанию»)', positions: 'позиций',
+    chooseTemplate: 'Выберите шаблон', chooseTemplateHint: 'Состав и подзаголовок подставятся из шаблона. Позиции можно добавлять и удалять, но только в этом предложении: шаблон не меняется.', emptyTemplate: 'Без шаблона (только позиции «по умолчанию»)', positions: 'позиций',
     saveAsTemplate: 'Сохранить состав как шаблон', tplOverwrite: 'Заменить шаблон', tplNew: 'Новый шаблон', tplName: 'Название шаблона', tplSaved: 'Шаблон сохранён', templates: 'Шаблоны', tplDelete: 'Удалить шаблон', template: 'Шаблон',
     pdfLang: 'Язык PDF', pdfSign: 'Подпись в PDF', signShort: 'Подпись', english: 'Английский (для PDF на EN)', nameEn: 'Название (англ.) — для PDF на английском', descEn: 'Описание для PDF на английском', subtitleOffer: 'Подзаголовок (греч.)', subtitleEn: 'Подзаголовок (англ.)',
   },
@@ -60,7 +60,7 @@ const T = {
     defaults: 'Προεπιλεγμένοι όροι', colors: 'Χρώματα μεμβράνης (με κόμμα)', nextNo: 'Επόμενος αριθμός', changePin: 'Αλλαγή PIN', newPin: 'Νέο PIN', saveSettings: 'Αποθήκευση ρυθμίσεων', logout: 'Έξοδος σε αυτό το κινητό',
     netErr: 'Δεν υπάρχει σύνδεση. Οι αλλαγές κρατήθηκαν στο κινητό.', unsavedPrice: 'χωρίς τιμή',
     fixedTotal: 'Συνολική τιμή χειροκίνητα (χωρίς τιμές ανά υλικό)', fixedNet: 'Συνολική τιμή χωρίς ΦΠΑ, €', fixedHint: 'Ο ΦΠΑ προστίθεται αυτόματα. Στο PDF εμφανίζονται οι θέσεις χωρίς τιμές και το σύνολο.',
-    chooseTemplate: 'Επιλέξτε πρότυπο', chooseTemplateHint: 'Το περιεχόμενο και ο υπότιτλος έρχονται από το πρότυπο. Μετά αλλάζουν ελεύθερα.', emptyTemplate: 'Χωρίς πρότυπο (μόνο τα προεπιλεγμένα)', positions: 'θέσεις',
+    chooseTemplate: 'Επιλέξτε πρότυπο', chooseTemplateHint: 'Το περιεχόμενο και ο υπότιτλος έρχονται από το πρότυπο. Οι αλλαγές ισχύουν μόνο για αυτή την προσφορά: το πρότυπο δεν αλλάζει.', emptyTemplate: 'Χωρίς πρότυπο (μόνο τα προεπιλεγμένα)', positions: 'θέσεις',
     saveAsTemplate: 'Αποθήκευση ως πρότυπο', tplOverwrite: 'Αντικατάσταση προτύπου', tplNew: 'Νέο πρότυπο', tplName: 'Όνομα προτύπου', tplSaved: 'Το πρότυπο αποθηκεύτηκε', templates: 'Πρότυπα', tplDelete: 'Διαγραφή προτύπου', template: 'Πρότυπο',
     pdfLang: 'Γλώσσα PDF', pdfSign: 'Υπογραφή στο PDF', signShort: 'Υπογρ.', english: 'Αγγλικά (για PDF στα αγγλικά)', nameEn: 'Όνομα (αγγλικά) — για PDF στα αγγλικά', descEn: 'Περιγραφή για PDF στα αγγλικά', subtitleOffer: 'Υπότιτλος (ελληνικά)', subtitleEn: 'Υπότιτλος (αγγλικά)',
   },
@@ -311,10 +311,6 @@ function renderOffer() {
     <div class="full">${fld('o_sub', t('subtitleOffer'), o.subtitle_el ?? s.subtitle ?? '')}</div>
     <div class="full">${fld('o_sub_en', t('subtitleEn'), o.subtitle_en ?? s.subtitle_en ?? '')}</div>
   </div></section>
-  <section class="card"><h2>${esc(t('saveAsTemplate'))}</h2><div class="grid">
-    <label class="f full">${esc(t('template'))}<select id="tplTarget"><option value="">${esc(t('tplNew'))}</option>${(s.templates || []).map((x) => `<option value="${esc(x.id)}" ${x.id === o.template ? 'selected' : ''}>${esc(t('tplOverwrite'))}: ${esc(lang === 'ru' ? x.ru || x.el : x.el)}</option>`).join('')}</select></label>
-    <div class="full" id="tplNameBox">${fld('tplName', t('tplName'), '')}</div>
-  </div><div class="row"><button class="btn" id="tplSave" type="button">${esc(t('saveAsTemplate'))}</button></div></section>
   <div class="row"><button class="btn" id="saveBtn" type="button">${esc(t('save'))}</button><button class="btn" id="dupBtn" type="button">${esc(t('duplicate'))}</button><button class="btn" id="newBtn" type="button">${esc(t('newOffer'))}</button></div>
   <div class="bar"><div class="in"><div class="tot"><span id="totSub"></span><b id="totVal"></b></div>
     <button class="btn main" id="pdfBtn" type="button">${esc(t('pdf'))}</button></div></div>`;
@@ -337,22 +333,6 @@ function renderOffer() {
   });
   $('#o_discount').closest('label').hidden = !!o.fixedTotal;
   bind('o_sub', (v) => { o.subtitle_el = v; }); bind('o_sub_en', (v) => { o.subtitle_en = v; });
-  const syncTplName = () => { $('#tplNameBox').hidden = $('#tplTarget').value !== ''; };
-  $('#tplTarget').onchange = syncTplName; syncTplName();
-  $('#tplSave').onclick = async () => {
-    const tpls = structuredClone(DB.settings.templates || []);
-    const target = $('#tplTarget').value;
-    const mats = o.lines.filter((l) => matById(l.matId)).map((l) => ({ id: l.matId, qty: l.qtyManual ? num(l.qty) : null }));
-    if (target) {
-      const x = tpls.find((y) => y.id === target); Object.assign(x, { materials: mats, subtitle_el: o.subtitle_el, subtitle_en: o.subtitle_en });
-    } else {
-      const name = $('#tplName').value.trim(); if (!name) return toast(t('tplName'), true);
-      tpls.push({ id: 't' + Date.now().toString(36), ru: name, el: name, subtitle_el: o.subtitle_el, subtitle_en: o.subtitle_en, materials: mats });
-      o.template = tpls[tpls.length - 1].id;
-    }
-    const ns = { ...DB.settings, templates: tpls };
-    try { await api('/settings', { method: 'PUT', body: { settings: ns } }); DB.settings = ns; saveDraft(); toast(t('tplSaved')); renderOffer(); } catch (e) { toast(t('netErr'), true); }
-  };
 
   const linesEl = $('#lines');
   const lineOf = (el) => o.lines.find((l) => l.key === el.closest('.line').dataset.key);
@@ -827,7 +807,6 @@ function renderSettings() {
       <label class="f">${esc(t('tplName'))} (ελ)<input data-tpl-el="${i}" value="${esc(x.el || '')}"></label>
       <p class="hint full">${x.materials.map((y) => matById(tplItem(y).id)).filter(Boolean).map((m) => esc(nameOf(m))).join(' · ')}</p>
       <div class="row full end"><button class="btn small danger" data-tpl-del="${i}" type="button">${esc(t('tplDelete'))}</button></div></div>`).join('')}
-    <p class="hint">${esc(t('chooseTemplateHint'))} → ${esc(t('saveAsTemplate'))}</p>
   </section>
   <section class="card"><h2>${esc(t('defaults'))}</h2><div class="grid">
     ${f('validDays', t('validDays'), 'inputmode="numeric"')}${f('vatRate', t('vatRate'), 'inputmode="decimal"')}${f('delivery', t('delivery'))}${f('place', t('place'))}${f('payment', t('payment'))}
