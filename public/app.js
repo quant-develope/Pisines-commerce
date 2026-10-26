@@ -25,7 +25,7 @@ const T = {
     units: { pcs: 'шт.', set: 'компл.', m: 'м', m2: 'м²', perim: 'м (периметр, считается сам)', area: 'м² (площадь воды, считается сам)' },
     catName: 'Название', catGroup: 'Раздел', groups: { A: 'А. Конструкция', B: 'Б. Оборудование', C: 'В. Опции' }, newCategory: '+ Категория', saveCategories: 'Сохранить категории', up: '↑', down: '↓',
     archive: 'Сохранённые предложения', archiveEmpty: 'Пока пусто. Нажмите «Сохранить» на экране предложения.', open: 'Открыть',
-    settings: 'Настройки', company: 'Компания (шапка PDF)', companyName: 'Название', tagline: 'Подпись', address: 'Адрес', phones: 'Телефоны', sites: 'Сайты', signatory: 'Подписант', subtitle: 'Подзаголовок предложения',
+    signCard: 'Подпись в PDF', signHint: 'Сфотографируйте подпись на белом листе. Фон уберётся сам, подпись встанет в PDF над строкой «Για την εταιρεία — Υπογραφή».', signUpload: 'Загрузить подпись', signDrop: 'или перетащите файл сюда', signRemove: 'Убрать подпись', settings: 'Настройки', company: 'Компания (шапка PDF)', companyName: 'Название', tagline: 'Подпись', address: 'Адрес', phones: 'Телефоны', sites: 'Сайты', signatory: 'Подписант', subtitle: 'Подзаголовок предложения',
     defaults: 'Условия по умолчанию', colors: 'Цвета мембраны (через запятую)', nextNo: 'Следующий номер', changePin: 'Сменить PIN', newPin: 'Новый PIN', saveSettings: 'Сохранить настройки', logout: 'Выйти на этом телефоне',
     netErr: 'Нет связи с сервером. Изменения сохранены на телефоне.', unsavedPrice: 'нет цены',
     fixedTotal: 'Указать итоговую цену вручную (без цен по материалам)', fixedNet: 'Итоговая цена без НДС, €', fixedHint: 'НДС добавится сам. В PDF будут позиции без цен и итог.',
@@ -54,7 +54,7 @@ const T = {
     units: { pcs: 'τεμ.', set: 'σετ', m: 'm', m2: 'm²', perim: 'm (περίμετρος, αυτόματα)', area: 'm² (επιφάνεια νερού, αυτόματα)' },
     catName: 'Όνομα', catGroup: 'Ενότητα', groups: { A: 'Α. Κατασκευή', B: 'Β. Εξοπλισμός', C: 'Γ. Επιπλέον' }, newCategory: '+ Κατηγορία', saveCategories: 'Αποθήκευση κατηγοριών', up: '↑', down: '↓',
     archive: 'Αποθηκευμένες προσφορές', archiveEmpty: 'Κενό. Πατήστε «Αποθήκευση» στην προσφορά.', open: 'Άνοιγμα',
-    settings: 'Ρυθμίσεις', company: 'Εταιρεία (κεφαλίδα PDF)', companyName: 'Όνομα', tagline: 'Υπότιτλος', address: 'Διεύθυνση', phones: 'Τηλέφωνα', sites: 'Ιστοσελίδες', signatory: 'Υπογράφων', subtitle: 'Υπότιτλος προσφοράς',
+    signCard: 'Υπογραφή στο PDF', signHint: 'Φωτογραφίστε την υπογραφή σε λευκό χαρτί. Το φόντο αφαιρείται αυτόματα και η υπογραφή μπαίνει στο PDF, στο «Για την εταιρεία — Υπογραφή».', signUpload: 'Ανέβασμα υπογραφής', signDrop: 'ή σύρετε το αρχείο εδώ', signRemove: 'Αφαίρεση υπογραφής', settings: 'Ρυθμίσεις', company: 'Εταιρεία (κεφαλίδα PDF)', companyName: 'Όνομα', tagline: 'Υπότιτλος', address: 'Διεύθυνση', phones: 'Τηλέφωνα', sites: 'Ιστοσελίδες', signatory: 'Υπογράφων', subtitle: 'Υπότιτλος προσφοράς',
     defaults: 'Προεπιλεγμένοι όροι', colors: 'Χρώματα μεμβράνης (με κόμμα)', nextNo: 'Επόμενος αριθμός', changePin: 'Αλλαγή PIN', newPin: 'Νέο PIN', saveSettings: 'Αποθήκευση ρυθμίσεων', logout: 'Έξοδος σε αυτό το κινητό',
     netErr: 'Δεν υπάρχει σύνδεση. Οι αλλαγές κρατήθηκαν στο κινητό.', unsavedPrice: 'χωρίς τιμή',
     fixedTotal: 'Συνολική τιμή χειροκίνητα (χωρίς τιμές ανά υλικό)', fixedNet: 'Συνολική τιμή χωρίς ΦΠΑ, €', fixedHint: 'Ο ΦΠΑ προστίθεται αυτόματα. Στο PDF εμφανίζονται οι θέσεις χωρίς τιμές και το σύνολο.',
@@ -561,7 +561,9 @@ async function buildDoc(o, L = 'el') {
     heading('4', P.accept),
     { text: P.acceptText, fontSize: 8.5, margin: [0, 0, 0, 8] },
     { table: { widths: ['*', '*'], body: [[
-      { stack: [{ text: P.forCo, bold: true, color: NAVY, margin: [0, 0, 0, 8] }, { text: sx('signatory'), margin: [0, 0, 0, 14] }, P.sign], margin: [2, 4, 2, 6] },
+      { stack: [{ text: P.forCo, bold: true, color: NAVY, margin: [0, 0, 0, 8] }, { text: sx('signatory'), margin: [0, 0, 0, DB.settings.signImg ? 34 : 14] }, P.sign,
+        // owner's signature sits on the line without moving it
+        ...(DB.settings.signImg ? [{ image: DB.settings.signImg, fit: [130, 44], relativePosition: { x: 58, y: -38 } }] : [])], margin: [2, 4, 2, 6] },
       { stack: [{ text: P.forClient, bold: true, color: NAVY, margin: [0, 0, 0, 8] }, { text: P.name, margin: [0, 0, 0, 10] }, { text: P.dateL, margin: [0, 0, 0, 10] }, P.sign], margin: [2, 4, 2, 6] },
     ]] }, layout: lay },
   ], unbreakable: true });
@@ -691,13 +693,7 @@ function renderMaterialEdit(m) {
     } catch (err) { toast(t('netErr'), true); }
   };
   $('#e_file').onchange = (e) => setPhoto(e.target.files[0]);
-  // desktop: drop an image file anywhere on the edit card; the photo box lights up
-  const card = $('#e_drop').closest('section'), box = $('#e_drop');
-  let depth = 0;
-  card.ondragenter = (e) => { if (e.dataTransfer.types.includes('Files')) { e.preventDefault(); depth++; box.classList.add('over'); } };
-  card.ondragover = (e) => { if (e.dataTransfer.types.includes('Files')) e.preventDefault(); };
-  card.ondragleave = () => { if (--depth <= 0) { depth = 0; box.classList.remove('over'); } };
-  card.ondrop = (e) => { e.preventDefault(); depth = 0; box.classList.remove('over'); setPhoto(e.dataTransfer.files[0]); };
+  dropZone($('#e_drop').closest('section'), $('#e_drop'), setPhoto);
   $('#e_noimg').onclick = () => { m.image = ''; $('#e_img').hidden = true; $('#e_noimg').hidden = true; };
   $('#e_save').onclick = async () => {
     const pv = $('#e_price').value.trim();
@@ -793,12 +789,17 @@ function renderSettings() {
     <label class="f full">${esc(t('colors'))}<input id="s_colors" value="${esc((s.colors || []).join(', '))}"></label>
     ${f('nextNo', t('nextNo'), 'inputmode="numeric"')}
   </div><div class="row"><button class="btn main" id="sSave" type="button">${esc(t('saveSettings'))}</button></div></section>
+  <section class="card" id="signCard"><h2>${esc(t('signCard'))}</h2><p class="hint">${esc(t('signHint'))}</p>
+    <div class="photo drop" id="signDrop"><img id="signImg" src="${esc(s.signImg || '')}" alt="" ${s.signImg ? '' : 'hidden'}>
+      <div class="row"><label class="btn small">${esc(t('signUpload'))}<input id="signFile" type="file" accept="image/*" hidden></label>
+      <button class="btn small" id="signDel" type="button" ${s.signImg ? '' : 'hidden'}>${esc(t('signRemove'))}</button>
+      <span class="hint">${esc(t('signDrop'))}</span></div></div></section>
   <section class="card"><h2>${esc(t('changePin'))}</h2><div class="grid">
     <label class="f">${esc(t('newPin'))}<input id="np1" type="password" inputmode="numeric" autocomplete="new-password"></label>
     <label class="f">${esc(t('pin2'))}<input id="np2" type="password" inputmode="numeric" autocomplete="new-password"></label></div>
     <div class="row"><button class="btn" id="pSave" type="button">${esc(t('changePin'))}</button><button class="btn danger" id="logout" type="button">${esc(t('logout'))}</button></div></section>`;
   $('#sSave').onclick = async () => {
-    const ns = { ...s };
+    const ns = { ...DB.settings };
     $$('[data-s]').forEach((i) => { ns[i.dataset.s] = i.value; });
     ns.vatRate = num(ns.vatRate); ns.validDays = num(ns.validDays); ns.nextNo = Math.max(1, Math.round(num(ns.nextNo)) || 1);
     ns.colors = $('#s_colors').value.split(',').map((x) => x.trim()).filter(Boolean);
@@ -816,6 +817,53 @@ function renderSettings() {
     try { const r = await api('/pin', { method: 'POST', body: { pin: a } }); token = r.token; store.set('token', token); toast(t('saved')); } catch (e) { toast(t('netErr'), true); }
   };
   $('#logout').onclick = (e) => confirmTap(e.currentTarget, t('logout') + '?', () => { token = null; store.del('token'); boot(); });
+  const putSign = async (img) => {
+    const ns = { ...DB.settings, signImg: img };
+    try { await api('/settings', { method: 'PUT', body: { settings: ns } }); DB.settings = ns; toast(t('saved')); } catch (e) { return toast(t('netErr'), true); }
+    $('#signImg').src = img; $('#signImg').hidden = !img; $('#signDel').hidden = !img;
+  };
+  const setSign = async (f) => {
+    if (!f) return;
+    if (!/^image\//.test(f.type)) return toast(t('dropBad'), true);
+    try { await putSign(signPng(await createImageBitmap(f))); } catch (e) { toast(t('dropBad'), true); }
+  };
+  $('#signFile').onchange = (e) => setSign(e.target.files[0]);
+  $('#signDel').onclick = () => putSign('');
+  dropZone($('#signCard'), $('#signDrop'), setSign);
+}
+
+// Photo of a signature on paper -> trimmed PNG: light paper becomes transparent, ink becomes dark blue.
+function signPng(bmp) {
+  const k = Math.min(1, 1200 / bmp.width);
+  const w = Math.round(bmp.width * k), h = Math.round(bmp.height * k);
+  const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+  const cx = cv.getContext('2d'); cx.drawImage(bmp, 0, 0, w, h);
+  const im = cx.getImageData(0, 0, w, h), d = im.data;
+  let sum = 0; for (let i = 0; i < d.length; i += 4) sum += d[i] * 0.3 + d[i + 1] * 0.59 + d[i + 2] * 0.11;
+  const paper = sum / (d.length / 4), ink = paper * 0.62;   // pixels clearly darker than the average paper are ink
+  let x0 = w, y0 = h, x1 = -1, y1 = -1;
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const i = (y * w + x) * 4, l = d[i] * 0.3 + d[i + 1] * 0.59 + d[i + 2] * 0.11;
+    const a = l >= paper * 0.85 ? 0 : l <= ink ? 255 : Math.round(255 * (paper * 0.85 - l) / (paper * 0.85 - ink));
+    d[i] = 18; d[i + 1] = 42; d[i + 2] = 110; d[i + 3] = a;
+    if (a > 60) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+  }
+  if (x1 < 0) throw new Error('empty');
+  cx.putImageData(im, 0, 0);
+  const pad = 6; x0 = Math.max(0, x0 - pad); y0 = Math.max(0, y0 - pad); x1 = Math.min(w - 1, x1 + pad); y1 = Math.min(h - 1, y1 + pad);
+  const s = Math.min(1, 600 / (x1 - x0 + 1), 220 / (y1 - y0 + 1));
+  const out = document.createElement('canvas'); out.width = Math.round((x1 - x0 + 1) * s); out.height = Math.round((y1 - y0 + 1) * s);
+  out.getContext('2d').drawImage(cv, x0, y0, x1 - x0 + 1, y1 - y0 + 1, 0, 0, out.width, out.height);
+  return out.toDataURL('image/png');
+}
+
+// desktop: drop an image file anywhere on the card; the box lights up while dragging
+function dropZone(card, box, onFile) {
+  let depth = 0;
+  card.ondragenter = (e) => { if (e.dataTransfer.types.includes('Files')) { e.preventDefault(); depth++; box.classList.add('over'); } };
+  card.ondragover = (e) => { if (e.dataTransfer.types.includes('Files')) e.preventDefault(); };
+  card.ondragleave = () => { if (--depth <= 0) { depth = 0; box.classList.remove('over'); } };
+  card.ondrop = (e) => { e.preventDefault(); depth = 0; box.classList.remove('over'); onFile(e.dataTransfer.files[0]); };
 }
 
 boot();
