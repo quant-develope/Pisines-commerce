@@ -1,3 +1,4 @@
+import { DESC_V4 } from './desc_v4.js';
 // Starting catalogue, written once when the PIN is first set. After that the owner
 // edits everything in the app («Материалы» / «Настройки»); prices are never stored here.
 
@@ -83,6 +84,10 @@ export const SEED_MATERIALS = [
     ['Δημιουργεί ρεύμα νερού και αέρα με ρυθμιζόμενη ένταση, για κολύμβηση κόντρα στο ρεύμα.'], false),
   m('turbo', 'attractions', 'Turbo jet υδρομασάζ', 'Turbo jet (гидромассаж)', 'pcs', 1, '—', '/img/turbo.jpg',
     ['Αυξάνει τη ροή επιστροφής του νερού για μασάζ και χαλάρωση, με ή χωρίς ανάμιξη αέρα.'], false),
+  m('karpa', 'attractions', 'Αντλία χωρίς προφίλτρο KARPA KA250 M για υδρομασάζ / Turbo jet', 'Насос без префильтра KARPA KA250 M для Turbo jet', 'pcs', 1, '2 χρόνια', '/img/karpa.jpg',
+    ['Φυγοκεντρική αντλία χωρίς προφίλτρο, σειρά KARPA / HCP 1000, για συστήματα υδρομασάζ, Turbo jet και αντίθετης κολύμβησης.',
+      'Μοντέλο KA250 M: 2,50 HP (P1 2,30 kW), μονοφασική 230 V, παροχή περίπου 44 m³/h στα 10 m. Συνδέσεις Φ90 (ANSI 3\'\').',
+      'Πτερωτή από ενισχυμένο Noryl και υδραυλικό σώμα από θερμοπλαστικό. Κινητήρας 50 Hz / 2.850 rpm, προστασία IP55, μόνωση κλάσης F. Κατάλληλη και για αλμυρό νερό (ηλεκτρόλυση άλατος) και θαλασσινό νερό.'], false),
 ];
 
 export const SEED_SETTINGS_BASE = {
@@ -131,6 +136,9 @@ export const SEED_EN = {
   phpump: ['Hayward pH dosing pump', ['Peristaltic dosing pump for automatic pH measurement and control. pH range 6.0 – 8.0 · IP56 · 230 V 50-60 Hz · alarm.', 'Includes pH probe, calibration solution and connection kit.']],
   heatpump: ['Inverter heat pump', ['Warm water at low running cost: the heat pump takes most of its energy from the air, a renewable and environmentally friendly source.']],
   counter: ['Counter-current swimming system', ['Creates a stream of water and air with adjustable strength, for swimming against the current.']],
+  karpa: ['KARPA KA250 M pump without pre-filter for hydromassage / Turbo jet', ['Centrifugal pump without pre-filter, KARPA / HCP 1000 series, for hydromassage, Turbo jet and counter-current systems.',
+    'Model KA250 M: 2.50 HP (P1 2.30 kW), single-phase 230 V, flow approx. 44 m³/h at 10 m. Connections Ø90 (ANSI 3\'\').',
+    'Impeller of reinforced Noryl and thermoplastic hydraulic body. Motor 50 Hz / 2,850 rpm, IP55 protection, class F insulation. Also suitable for salt water (salt electrolysis) and sea water.']],
   turbo: ['Turbo jet hydromassage', ['Boosts the return water flow for massage and relaxation, with or without air mixing.']],
 };
 
@@ -144,7 +152,7 @@ export const SEED_TEMPLATES = [
     materials: ['panels15', 'liner15', 'equip', 'f400', 'kse15', 'grate', tq('inlets', 3), 'vacinlet', tq('led', 1), 'skimmer', 'vacuum', 'net', 'pole', 'hose', 'testkit', 'muro', 'elpanel', 'turbo'] },
   { id: 'hydro_salt', ru: 'С гидромассажем и электролизом соли', el: 'Πισίνα με υδρομασάζ και ηλεκτρόλυση',
     subtitle_el: 'Πισίνα με ηλεκτρόλυση άλατος', subtitle_en: 'Pool with salt electrolysis',
-    materials: [...LINING, 'salt', 'phpump', 'elpanel'] },
+    materials: [...LINING, 'salt', 'phpump', 'elpanel', 'karpa'] },
   { id: 'hydro_heat', ru: 'С гидромассажем, тепловым насосом Inverter и противотоком', el: 'Πισίνα με υδρομασάζ, αντλία θερμότητας και αντίθετη κολύμβηση',
     subtitle_el: 'Πισίνα με αντλία θερμότητας Inverter και σύστημα αντίθετης κολύμβησης', subtitle_en: 'Pool with Inverter heat pump and counter-current system',
     materials: [...LINING, 'salt', 'phpump', 'elpanel', 'heatpump', 'counter'] },
@@ -165,5 +173,8 @@ export const SEED_SETTINGS_EN = {
   notIncluded_en: 'Extra cement and sand for the screed and gross concrete, as well as additional excavation, backfilling, concreting and screeding.',
 };
 
-SEED_MATERIALS.forEach((x) => { const e = SEED_EN[x.id]; if (e) { x.en = e[0]; x.desc_en = e[1]; } });
+SEED_MATERIALS.forEach((x) => {
+  const e = SEED_EN[x.id]; if (e) { x.en = e[0]; x.desc_en = e[1]; }
+  const d = DESC_V4[x.id]; if (d) { x.desc_el = d.el; x.desc_en = d.en; }
+});
 export const SEED_SETTINGS = { ...SEED_SETTINGS_BASE, ...SEED_SETTINGS_EN, templates: SEED_TEMPLATES };

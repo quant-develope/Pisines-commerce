@@ -3,8 +3,9 @@
 // SQLite-backed Durable Object, so nothing private is ever committed to the repo.
 import { DurableObject } from 'cloudflare:workers';
 import { SEED_CATEGORIES, SEED_MATERIALS, SEED_SETTINGS, SEED_EN, SEED_TEMPLATES, SEED_SETTINGS_EN } from './seed.js';
+import { PREV_DESC } from './seed_prev.js';
 
-const SEED_VERSION = 3;
+const SEED_VERSION = 4;
 
 const json = (data, status = 200) => new Response(JSON.stringify(data), {
   status, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' },
@@ -85,6 +86,24 @@ export class Store extends DurableObject {
       const seedIds = SEED_TEMPLATES.map((x) => x.id);
       settings.templates = [...SEED_TEMPLATES, ...(settings.templates || []).filter((x) => !seedIds.includes(x.id))];
       await S.put('settings', settings);
+    }
+    if (v < 4) {
+      // KARPA pump added at the end of the salt template; fuller descriptions where the owner kept the seeded text
+      const settings = (await S.get('settings')) || {};
+      const t = (settings.templates || []).find((x) => x.id === 'hydro_salt');
+      if (t && !t.materials.some((x) => (x.id || x) === 'karpa')) { t.materials.push('karpa'); await S.put('settings', settings); }
+      const same = (a, b) => JSON.stringify(a || []) === JSON.stringify(b || []);
+      const batch = {};
+      if (!(await S.get('mat:karpa'))) batch['mat:karpa'] = { ...SEED_MATERIALS.find((x) => x.id === 'karpa'), order: SEED_MATERIALS.length };
+      for (const [key, m] of await S.list({ prefix: 'mat:' })) {
+        const prev = PREV_DESC[m.id], seed = SEED_MATERIALS.find((x) => x.id === m.id);
+        if (!prev || !seed) continue;
+        const upd = { ...m };
+        if (same(m.desc_el, prev.el)) upd.desc_el = seed.desc_el;
+        if (same(m.desc_en, prev.en)) upd.desc_en = seed.desc_en;
+        if (upd.desc_el !== m.desc_el || upd.desc_en !== m.desc_en) batch[key] = upd;
+      }
+      if (Object.keys(batch).length) await S.put(batch);
     }
     await S.put('seedVersion', SEED_VERSION);
   }
