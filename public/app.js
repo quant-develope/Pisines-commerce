@@ -31,7 +31,7 @@ const T = {
     fixedTotal: 'Указать итоговую цену вручную (без цен по материалам)', fixedNet: 'Итоговая цена без НДС, €', fixedHint: 'НДС добавится сам. В PDF будут позиции без цен и итог.',
     chooseTemplate: 'Выберите шаблон', chooseTemplateHint: 'Состав и подзаголовок подставятся из шаблона. Потом всё можно поменять.', emptyTemplate: 'Без шаблона (только позиции «по умолчанию»)', positions: 'позиций',
     saveAsTemplate: 'Сохранить состав как шаблон', tplOverwrite: 'Заменить шаблон', tplNew: 'Новый шаблон', tplName: 'Название шаблона', tplSaved: 'Шаблон сохранён', templates: 'Шаблоны', tplDelete: 'Удалить шаблон', template: 'Шаблон',
-    pdfLang: 'Язык PDF', english: 'Английский (для PDF на EN)', nameEn: 'Название (англ.) — для PDF на английском', descEn: 'Описание для PDF на английском', subtitleOffer: 'Подзаголовок (греч.)', subtitleEn: 'Подзаголовок (англ.)',
+    pdfLang: 'Язык PDF', pdfSign: 'Подпись в PDF', signShort: 'Подпись', english: 'Английский (для PDF на EN)', nameEn: 'Название (англ.) — для PDF на английском', descEn: 'Описание для PDF на английском', subtitleOffer: 'Подзаголовок (греч.)', subtitleEn: 'Подзаголовок (англ.)',
   },
   el: {
     appName: 'Οικονομικές προσφορές', tabOffer: 'Προσφορά', tabMaterials: 'Υλικά', tabArchive: 'Αρχείο', tabSettings: 'Ρυθμίσεις',
@@ -60,7 +60,7 @@ const T = {
     fixedTotal: 'Συνολική τιμή χειροκίνητα (χωρίς τιμές ανά υλικό)', fixedNet: 'Συνολική τιμή χωρίς ΦΠΑ, €', fixedHint: 'Ο ΦΠΑ προστίθεται αυτόματα. Στο PDF εμφανίζονται οι θέσεις χωρίς τιμές και το σύνολο.',
     chooseTemplate: 'Επιλέξτε πρότυπο', chooseTemplateHint: 'Το περιεχόμενο και ο υπότιτλος έρχονται από το πρότυπο. Μετά αλλάζουν ελεύθερα.', emptyTemplate: 'Χωρίς πρότυπο (μόνο τα προεπιλεγμένα)', positions: 'θέσεις',
     saveAsTemplate: 'Αποθήκευση ως πρότυπο', tplOverwrite: 'Αντικατάσταση προτύπου', tplNew: 'Νέο πρότυπο', tplName: 'Όνομα προτύπου', tplSaved: 'Το πρότυπο αποθηκεύτηκε', templates: 'Πρότυπα', tplDelete: 'Διαγραφή προτύπου', template: 'Πρότυπο',
-    pdfLang: 'Γλώσσα PDF', english: 'Αγγλικά (για PDF στα αγγλικά)', nameEn: 'Όνομα (αγγλικά) — για PDF στα αγγλικά', descEn: 'Περιγραφή για PDF στα αγγλικά', subtitleOffer: 'Υπότιτλος (ελληνικά)', subtitleEn: 'Υπότιτλος (αγγλικά)',
+    pdfLang: 'Γλώσσα PDF', pdfSign: 'Υπογραφή στο PDF', signShort: 'Υπογρ.', english: 'Αγγλικά (για PDF στα αγγλικά)', nameEn: 'Όνομα (αγγλικά) — για PDF στα αγγλικά', descEn: 'Περιγραφή για PDF στα αγγλικά', subtitleOffer: 'Υπότιτλος (ελληνικά)', subtitleEn: 'Υπότιτλος (αγγλικά)',
   },
 };
 const UNIT_EL = { pcs: 'τεμ.', set: 'σετ', m: 'm', m2: 'm²', perim: 'm', area: 'm²' };
@@ -316,6 +316,7 @@ function renderOffer() {
   <div class="row"><button class="btn" id="saveBtn" type="button">${esc(t('save'))}</button><button class="btn" id="dupBtn" type="button">${esc(t('duplicate'))}</button><button class="btn" id="newBtn" type="button">${esc(t('newOffer'))}</button></div>
   <div class="bar"><div class="in"><div class="tot"><span id="totSub"></span><b id="totVal"></b></div>
     <button class="btn" id="shareBtn" type="button" hidden>${esc(t('share'))}</button>
+    ${DB.settings.signImg ? `<label class="signtog" title="${esc(t('pdfSign'))}"><input type="checkbox" id="pdfSign">${esc(t('signShort'))}</label>` : ''}
     <select id="pdfLang" aria-label="${esc(t('pdfLang'))}" style="width:auto"><option value="el">ΕΛ</option><option value="en">EN</option></select>
     <button class="btn main" id="pdfBtn" type="button">${esc(t('pdf'))}</button></div></div>`;
   $('#app').innerHTML = html;
@@ -340,6 +341,7 @@ function renderOffer() {
   bind('o_sub', (v) => { o.subtitle_el = v; }); bind('o_sub_en', (v) => { o.subtitle_en = v; });
   $('#pdfLang').value = store.get('pdfLang', 'el');
   $('#pdfLang').onchange = (e) => store.set('pdfLang', e.target.value);
+  if ($('#pdfSign')) { $('#pdfSign').checked = store.get('pdfSign', true) !== false; $('#pdfSign').onchange = (e) => store.set('pdfSign', e.target.checked); }
   const syncTplName = () => { $('#tplNameBox').hidden = $('#tplTarget').value !== ''; };
   $('#tplTarget').onchange = syncTplName; syncTplName();
   $('#tplSave').onclick = async () => {
@@ -491,7 +493,7 @@ function warEn(w) {
   if (m) return `${m[1]} ${+m[1] === 1 ? 'year' : 'years'}`;
   return w || '—';
 }
-async function buildDoc(o, L = 'el') {
+async function buildDoc(o, L = 'el', withSign = false) {
   const P = PDF_T[L], EN = L === 'en';
   const s = DB.settings, c = totals(o), pc = c.pc;
   // a Greek default term prints as its English default; anything typed by hand prints as typed
@@ -561,9 +563,9 @@ async function buildDoc(o, L = 'el') {
     heading('4', P.accept),
     { text: P.acceptText, fontSize: 8.5, margin: [0, 0, 0, 8] },
     { table: { widths: ['*', '*'], body: [[
-      { stack: [{ text: P.forCo, bold: true, color: NAVY, margin: [0, 0, 0, 8] }, { text: sx('signatory'), margin: [0, 0, 0, DB.settings.signImg ? 34 : 14] }, P.sign,
+      { stack: [{ text: P.forCo, bold: true, color: NAVY, margin: [0, 0, 0, 8] }, { text: sx('signatory'), margin: [0, 0, 0, DB.settings.signImg && withSign ? 34 : 14] }, P.sign,
         // owner's signature sits on the line without moving it
-        ...(DB.settings.signImg ? [{ image: DB.settings.signImg, fit: [130, 44], relativePosition: { x: 58, y: -38 } }] : [])], margin: [2, 4, 2, 6] },
+        ...(DB.settings.signImg && withSign ? [{ image: DB.settings.signImg, fit: [130, 44], relativePosition: { x: 58, y: -38 } }] : [])], margin: [2, 4, 2, 6] },
       { stack: [{ text: P.forClient, bold: true, color: NAVY, margin: [0, 0, 0, 8] }, { text: P.name, margin: [0, 0, 0, 10] }, { text: P.dateL, margin: [0, 0, 0, 10] }, P.sign], margin: [2, 4, 2, 6] },
     ]] }, layout: lay },
   ], unbreakable: true });
@@ -619,7 +621,7 @@ async function makePdf(mode, L = 'el') {
   const btn = $(mode === 'share' ? '#shareBtn' : '#pdfBtn'); btn.disabled = true;
   try {
     await saveOffer(true);
-    const doc = await buildDoc(offer, L);
+    const doc = await buildDoc(offer, L, Boolean($('#pdfSign') && $('#pdfSign').checked));
     const blob = await new Promise((res) => pdfMake.createPdf(doc).getBlob(res));
     const name = pdfName(offer, L);
     if (mode === 'share') {

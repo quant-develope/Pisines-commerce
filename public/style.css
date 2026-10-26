@@ -78,6 +78,8 @@ input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-
   padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)) }
 .bar .in { max-width: 680px; margin: 0 auto; display: flex; gap: 10px; align-items: center }
 .bar .tot { flex: 1; min-width: 0; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums }
+.signtog { display: flex; align-items: center; gap: 5px; font-size: 13px; color: var(--muted); white-space: nowrap; cursor: pointer }
+.signtog input { width: 18px; height: 18px; accent-color: var(--navy) }
 .bar .tot b { display: block; font-size: 20px; color: var(--ink) }
 
 /* materials list */
