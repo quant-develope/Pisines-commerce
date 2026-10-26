@@ -20,7 +20,6 @@ button, input, select, textarea { font: inherit; color: inherit }
 .brand img { border-radius: 8px }
 .brand b { display: block; color: var(--navy); font-size: 17px; letter-spacing: .02em }
 .brand span { display: block; color: var(--muted); font-size: 12.5px }
-.topr { display: flex; gap: 8px; align-items: center; flex: none }
 .lang { display: flex; border: 1px solid var(--line); border-radius: 9px; overflow: hidden; flex: none }
 .lang button { border: 0; background: var(--card); padding: 7px 11px; font-weight: 600; font-size: 13px; color: var(--muted); cursor: pointer }
 .lang button.on { background: var(--navy); color: #fff }

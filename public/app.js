@@ -20,7 +20,7 @@ const T = {
     pdf: 'PDF', save: 'Сохранить', saved: 'Сохранено', newOffer: 'Новое', duplicate: 'Копия',
     newConfirm: 'Нажмите ещё раз: начнётся новое предложение.', pdfMissing: 'Нет цены у позиций: ', pdfReady: 'PDF готов', pdfLoading: 'Генератор PDF ещё загружается, подождите пару секунд',
     share: 'Отправить', download: 'Скачать', sendApps: 'Отправить',
-    appCard: 'Приложение', appHint: 'Установите сайт как приложение: оно откроется с иконки на экране, на весь экран, и покажет последний каталог даже без интернета.', appInstall: 'Установить приложение', installShort: 'Установить', appInstalled: 'Приложение установлено ✓', appIos: 'На iPhone: откройте сайт в Safari → кнопка «Поделиться» → «На экран Домой».', appOther: 'Если кнопки нет: меню браузера (⋮) → «Установить приложение» или «Добавить на главный экран».',
+    appCard: 'Приложение', appHint: 'Установите сайт как приложение: оно откроется с иконки на экране, на весь экран, и покажет последний каталог даже без интернета.', appInstall: 'Установить приложение', appInstalled: 'Приложение установлено ✓', appIos: 'На iPhone: откройте сайт в Safari → кнопка «Поделиться» → «На экран Домой».', appOther: 'Если кнопки нет: меню браузера (⋮) → «Установить приложение» или «Добавить на главный экран».',
     materials: 'Справочник материалов', matHint: 'Здесь хранятся материалы и их цены. В предложении цена подставится сама.', search: 'Поиск', newMaterial: '+ Новый материал', editCategories: 'Категории',
     matEdit: 'Материал', category: 'Категория', nameEl: 'Название (греч.) — идёт в PDF', nameRu: 'Название (рус.)', unit: 'Единица', defQty: 'Кол-во по умолч.', price: 'Цена за ед. без НДС, €', warranty: 'Гарантия (греч.)', desc: 'Описание для PDF (греч.). Пустая строка = новый абзац. {color} = цвет мембраны', photo: 'Фото', uploadPhoto: 'Загрузить фото', dropPhoto: 'или перетащите файл с фото сюда', dropBad: 'Это не картинка', removePhoto: 'Убрать фото', isDefault: 'Добавлять в новое предложение автоматически', del: 'Удалить', delConfirm: 'Нажмите ещё раз для удаления', back: '← Назад',
     units: { pcs: 'шт.', set: 'компл.', m: 'м', m2: 'м²', perim: 'м (периметр, считается сам)', area: 'м² (площадь воды, считается сам)' },
@@ -50,7 +50,7 @@ const T = {
     pdf: 'PDF', save: 'Αποθήκευση', saved: 'Αποθηκεύτηκε', newOffer: 'Νέα', duplicate: 'Αντίγραφο',
     newConfirm: 'Πατήστε ξανά για νέα προσφορά.', pdfMissing: 'Χωρίς τιμή: ', pdfReady: 'Το PDF είναι έτοιμο', pdfLoading: 'Η δημιουργία PDF φορτώνει, περιμένετε λίγο',
     share: 'Αποστολή', download: 'Λήψη', sendApps: 'Αποστολή',
-    appCard: 'Εφαρμογή', appHint: 'Εγκαταστήστε τον ιστότοπο ως εφαρμογή: ανοίγει από εικονίδιο, σε πλήρη οθόνη, και δείχνει τον τελευταίο κατάλογο και χωρίς internet.', appInstall: 'Εγκατάσταση εφαρμογής', installShort: 'Εγκατάσταση', appInstalled: 'Η εφαρμογή είναι εγκατεστημένη ✓', appIos: 'Σε iPhone: ανοίξτε τον ιστότοπο στο Safari → «Κοινοποίηση» → «Προσθήκη στην οθόνη Αφετηρίας».', appOther: 'Αν δεν υπάρχει κουμπί: μενού του browser (⋮) → «Εγκατάσταση εφαρμογής».',
+    appCard: 'Εφαρμογή', appHint: 'Εγκαταστήστε τον ιστότοπο ως εφαρμογή: ανοίγει από εικονίδιο, σε πλήρη οθόνη, και δείχνει τον τελευταίο κατάλογο και χωρίς internet.', appInstall: 'Εγκατάσταση εφαρμογής', appInstalled: 'Η εφαρμογή είναι εγκατεστημένη ✓', appIos: 'Σε iPhone: ανοίξτε τον ιστότοπο στο Safari → «Κοινοποίηση» → «Προσθήκη στην οθόνη Αφετηρίας».', appOther: 'Αν δεν υπάρχει κουμπί: μενού του browser (⋮) → «Εγκατάσταση εφαρμογής».',
     materials: 'Κατάλογος υλικών', matHint: 'Εδώ φυλάσσονται τα υλικά και οι τιμές τους. Στην προσφορά η τιμή μπαίνει αυτόματα.', search: 'Αναζήτηση', newMaterial: '+ Νέο υλικό', editCategories: 'Κατηγορίες',
     matEdit: 'Υλικό', category: 'Κατηγορία', nameEl: 'Όνομα (ελληνικά) — στο PDF', nameRu: 'Όνομα (ρωσικά)', unit: 'Μονάδα', defQty: 'Προεπιλ. ποσότητα', price: 'Τιμή μονάδας χωρίς ΦΠΑ, €', warranty: 'Εγγύηση', desc: 'Περιγραφή για το PDF. Κενή γραμμή = νέα παράγραφος. {color} = χρώμα μεμβράνης', photo: 'Φωτογραφία', uploadPhoto: 'Ανέβασμα φωτογραφίας', dropPhoto: 'ή σύρετε εδώ το αρχείο της φωτογραφίας', dropBad: 'Δεν είναι εικόνα', removePhoto: 'Αφαίρεση φωτογραφίας', isDefault: 'Μπαίνει αυτόματα σε νέα προσφορά', del: 'Διαγραφή', delConfirm: 'Πατήστε ξανά για διαγραφή', back: '← Πίσω',
     units: { pcs: 'τεμ.', set: 'σετ', m: 'm', m2: 'm²', perim: 'm (περίμετρος, αυτόματα)', area: 'm² (επιφάνεια νερού, αυτόματα)' },
@@ -869,15 +869,13 @@ function renderSettings() {
 // ---------- installable app ----------
 let installEvt = null;
 const standalone = () => window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
-// the header button shows only while the browser offers installation (Chrome, Edge, Android); iPhone uses the hint in Settings
 async function install() {
   if (!installEvt) return;
   installEvt.prompt(); await installEvt.userChoice; installEvt = null;
-  $('#installTop').hidden = true; if (view === 'settings') renderSettings();
+  if (view === 'settings') renderSettings();
 }
-$('#installTop').onclick = install;
-window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); installEvt = e; $('#installTop').hidden = standalone(); if (view === 'settings') renderSettings(); });
-window.addEventListener('appinstalled', () => { installEvt = null; $('#installTop').hidden = true; });
+window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); installEvt = e; if (view === 'settings') renderSettings(); });
+window.addEventListener('appinstalled', () => { installEvt = null; });
 if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
 
 // Photo of a signature on paper -> trimmed PNG: light paper becomes transparent, ink becomes dark blue.
