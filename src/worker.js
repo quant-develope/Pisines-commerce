@@ -4,7 +4,7 @@
 import { DurableObject } from 'cloudflare:workers';
 import { SEED_CATEGORIES, SEED_MATERIALS, SEED_SETTINGS, SEED_EN, SEED_TEMPLATES, SEED_SETTINGS_EN } from './seed.js';
 
-const SEED_VERSION = 2;
+const SEED_VERSION = 3;
 
 const json = (data, status = 200) => new Response(JSON.stringify(data), {
   status, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' },
@@ -78,6 +78,13 @@ export class Store extends DurableObject {
         if (e && !m.en) batch[key] = { ...m, en: e[0], desc_en: e[1] };
       }
       if (Object.keys(batch).length) await S.put(batch);
+    }
+    if (v < 3) {
+      // templates rebuilt to match the example offers item by item; owner-made templates stay
+      const settings = (await S.get('settings')) || {};
+      const seedIds = SEED_TEMPLATES.map((x) => x.id);
+      settings.templates = [...SEED_TEMPLATES, ...(settings.templates || []).filter((x) => !seedIds.includes(x.id))];
+      await S.put('settings', settings);
     }
     await S.put('seedVersion', SEED_VERSION);
   }

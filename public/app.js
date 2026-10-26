@@ -128,11 +128,12 @@ function offerNo(n) { return `${String(n).padStart(3, '0')}/${today().slice(0, 4
 function lineFromMaterial(m) {
   return { key: Math.random().toString(36).slice(2), matId: m.id, category: m.category, qty: m.qty ?? 1, qtyManual: false, price: m.price ?? null, custom: false };
 }
+const tplItem = (x) => (typeof x === 'string' ? { id: x, qty: null } : x);
 function newOffer(tplId) {
   const s = DB.settings;
   const tpl = (s.templates || []).find((x) => x.id === tplId);
   const lines = [];
-  if (tpl) tpl.materials.map(matById).filter(Boolean).forEach((m) => lines.push(lineFromMaterial(m)));
+  if (tpl) tpl.materials.map(tplItem).forEach(({ id, qty }) => { const m = matById(id); if (!m) return; const l = lineFromMaterial(m); if (qty != null) { l.qty = qty; l.qtyManual = true; } lines.push(l); });
   else DB.categories.forEach((c) => DB.materials.filter((m) => m.category === c.id && m.default).forEach((m) => lines.push(lineFromMaterial(m))));
   return {
     id: null, template: tpl ? tpl.id : '', subtitle_el: tpl ? tpl.subtitle_el : (s.subtitle || ''), subtitle_en: tpl ? tpl.subtitle_en : (s.subtitle_en || ''),
@@ -254,7 +255,7 @@ function lineHtml(l) {
 function renderTemplatePicker() {
   const tpls = DB.settings.templates || [];
   $('#app').innerHTML = `<h1 class="page">${esc(t('chooseTemplate'))}</h1><p class="hint">${esc(t('chooseTemplateHint'))}</p>
-    ${tpls.map((x) => `<button type="button" class="card tpl" data-tpl="${esc(x.id)}"><b>${esc(lang === 'ru' ? x.ru || x.el : x.el)}</b><span>${esc(x.subtitle_el || '')}</span><span>${x.materials.filter(matById).length} ${esc(t('positions'))}</span></button>`).join('')}
+    ${tpls.map((x) => `<button type="button" class="card tpl" data-tpl="${esc(x.id)}"><b>${esc(lang === 'ru' ? x.ru || x.el : x.el)}</b><span>${esc(x.subtitle_el || '')}</span><span>${x.materials.filter((y) => matById(tplItem(y).id)).length} ${esc(t('positions'))}</span></button>`).join('')}
     <button type="button" class="card tpl" data-tpl=""><b>${esc(t('emptyTemplate'))}</b></button>
     ${offer ? `<button class="btn link" id="tplBack" type="button">${esc(t('back'))}</button>` : ''}`;
   $$('[data-tpl]').forEach((b) => b.addEventListener('click', () => { offer = newOffer(b.dataset.tpl); saveDraft(); renderOffer(); window.scrollTo(0, 0); }));
@@ -263,6 +264,7 @@ function renderTemplatePicker() {
 function renderOffer() {
   if (!offer) return renderTemplatePicker();
   const o = offer, s = DB.settings;
+  totals(o); // fills auto quantities (perimeter / area) before drawing
   const groups = ['A', 'B', 'C'];
   const ordered = [];
   groups.forEach((g) => DB.categories.filter((c) => c.group === g).forEach((c) => o.lines.filter((l) => l.category === c.id).forEach((l) => ordered.push(l))));
@@ -330,7 +332,7 @@ function renderOffer() {
   $('#tplSave').onclick = async () => {
     const tpls = structuredClone(DB.settings.templates || []);
     const target = $('#tplTarget').value;
-    const mats = o.lines.map((l) => l.matId).filter((id, i, a) => matById(id) && a.indexOf(id) === i);
+    const mats = o.lines.filter((l) => matById(l.matId)).map((l) => ({ id: l.matId, qty: l.qtyManual ? num(l.qty) : null }));
     if (target) {
       const x = tpls.find((y) => y.id === target); Object.assign(x, { materials: mats, subtitle_el: o.subtitle_el, subtitle_en: o.subtitle_en });
     } else {
@@ -756,7 +758,7 @@ function renderSettings() {
     ${(s.templates || []).map((x, i) => `<div class="grid" style="border-top:1px solid var(--line);padding-top:10px">
       <label class="f">${esc(t('tplName'))} (рус)<input data-tpl-ru="${i}" value="${esc(x.ru || '')}"></label>
       <label class="f">${esc(t('tplName'))} (ελ)<input data-tpl-el="${i}" value="${esc(x.el || '')}"></label>
-      <p class="hint full">${x.materials.filter(matById).map((id) => esc(nameOf(matById(id)))).join(' · ')}</p>
+      <p class="hint full">${x.materials.map((y) => matById(tplItem(y).id)).filter(Boolean).map((m) => esc(nameOf(m))).join(' · ')}</p>
       <div class="row full end"><button class="btn small danger" data-tpl-del="${i}" type="button">${esc(t('tplDelete'))}</button></div></div>`).join('')}
     <p class="hint">${esc(t('chooseTemplateHint'))} → ${esc(t('saveAsTemplate'))}</p>
   </section>
