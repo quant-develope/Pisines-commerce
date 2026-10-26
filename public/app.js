@@ -28,6 +28,7 @@ const T = {
     settings: 'Настройки', company: 'Компания (шапка PDF)', companyName: 'Название', tagline: 'Подпись', address: 'Адрес', phones: 'Телефоны', sites: 'Сайты', signatory: 'Подписант', subtitle: 'Подзаголовок предложения',
     defaults: 'Условия по умолчанию', colors: 'Цвета мембраны (через запятую)', nextNo: 'Следующий номер', changePin: 'Сменить PIN', newPin: 'Новый PIN', saveSettings: 'Сохранить настройки', logout: 'Выйти на этом телефоне',
     netErr: 'Нет связи с сервером. Изменения сохранены на телефоне.', unsavedPrice: 'нет цены',
+    fixedTotal: 'Указать итоговую цену вручную (без цен по материалам)', fixedNet: 'Итоговая цена без НДС, €', fixedHint: 'НДС добавится сам. В PDF будут позиции без цен и итог.',
     chooseTemplate: 'Выберите шаблон', chooseTemplateHint: 'Состав и подзаголовок подставятся из шаблона. Потом всё можно поменять.', emptyTemplate: 'Без шаблона (только позиции «по умолчанию»)', positions: 'позиций',
     saveAsTemplate: 'Сохранить состав как шаблон', tplOverwrite: 'Заменить шаблон', tplNew: 'Новый шаблон', tplName: 'Название шаблона', tplSaved: 'Шаблон сохранён', templates: 'Шаблоны', tplDelete: 'Удалить шаблон', template: 'Шаблон',
     pdfLang: 'Язык PDF', english: 'Английский (для PDF на EN)', nameEn: 'Название (англ.) — для PDF на английском', descEn: 'Описание для PDF на английском', subtitleOffer: 'Подзаголовок (греч.)', subtitleEn: 'Подзаголовок (англ.)',
@@ -56,6 +57,7 @@ const T = {
     settings: 'Ρυθμίσεις', company: 'Εταιρεία (κεφαλίδα PDF)', companyName: 'Όνομα', tagline: 'Υπότιτλος', address: 'Διεύθυνση', phones: 'Τηλέφωνα', sites: 'Ιστοσελίδες', signatory: 'Υπογράφων', subtitle: 'Υπότιτλος προσφοράς',
     defaults: 'Προεπιλεγμένοι όροι', colors: 'Χρώματα μεμβράνης (με κόμμα)', nextNo: 'Επόμενος αριθμός', changePin: 'Αλλαγή PIN', newPin: 'Νέο PIN', saveSettings: 'Αποθήκευση ρυθμίσεων', logout: 'Έξοδος σε αυτό το κινητό',
     netErr: 'Δεν υπάρχει σύνδεση. Οι αλλαγές κρατήθηκαν στο κινητό.', unsavedPrice: 'χωρίς τιμή',
+    fixedTotal: 'Συνολική τιμή χειροκίνητα (χωρίς τιμές ανά υλικό)', fixedNet: 'Συνολική τιμή χωρίς ΦΠΑ, €', fixedHint: 'Ο ΦΠΑ προστίθεται αυτόματα. Στο PDF εμφανίζονται οι θέσεις χωρίς τιμές και το σύνολο.',
     chooseTemplate: 'Επιλέξτε πρότυπο', chooseTemplateHint: 'Το περιεχόμενο και ο υπότιτλος έρχονται από το πρότυπο. Μετά αλλάζουν ελεύθερα.', emptyTemplate: 'Χωρίς πρότυπο (μόνο τα προεπιλεγμένα)', positions: 'θέσεις',
     saveAsTemplate: 'Αποθήκευση ως πρότυπο', tplOverwrite: 'Αντικατάσταση προτύπου', tplNew: 'Νέο πρότυπο', tplName: 'Όνομα προτύπου', tplSaved: 'Το πρότυπο αποθηκεύτηκε', templates: 'Πρότυπα', tplDelete: 'Διαγραφή προτύπου', template: 'Πρότυπο',
     pdfLang: 'Γλώσσα PDF', english: 'Αγγλικά (για PDF στα αγγλικά)', nameEn: 'Όνομα (αγγλικά) — για PDF στα αγγλικά', descEn: 'Περιγραφή για PDF στα αγγλικά', subtitleOffer: 'Υπότιτλος (ελληνικά)', subtitleEn: 'Υπότιτλος (αγγλικά)',
@@ -160,10 +162,11 @@ function totals(o) {
   let net = 0; const missing = [];
   o.lines.forEach((l) => {
     l.qty = autoQty(l, pc);
+    if (o.fixedTotal) return;
     if (!hasNum(l.price)) { const m = matById(l.matId); missing.push(m ? nameOf(m) : '?'); return; }
     net += num(l.price) * num(l.qty);
   });
-  net -= num(o.discount);
+  if (o.fixedTotal) net = num(o.fixedNet); else net -= num(o.discount);
   const rate = num(o.terms.vatRate);
   const vat = Math.round(net * rate) / 100;
   return { pc, net, rate, vat, total: net + vat, missing };
@@ -241,15 +244,15 @@ function lineHtml(l) {
   const sum = priceSet ? num(l.price) * num(l.qty) : 0;
   const sumTxt = priceSet ? (sum === 0 ? t('included') : money(sum) + ' €') : '';
   return `<div class="line" data-key="${l.key}">
-    <div class="cat"><span>${esc(catName(c))}</span><span class="sum">${esc(sumTxt)}</span><button type="button" data-act="rm" aria-label="${esc(t('remove'))}">×</button></div>
+    <div class="cat"><span>${esc(catName(c))}</span><span class="sum pp">${esc(sumTxt)}</span><button type="button" data-act="rm" aria-label="${esc(t('remove'))}">×</button></div>
     <select data-act="mat" aria-label="${esc(t('chooseMat'))}">${matOptions(l.category, l.matId)}</select>
     <div class="nums">
       <label class="f">${esc(t('qty'))}${unit ? ', ' + esc(unit) : ''}<input data-act="qty" class="num" inputmode="decimal" value="${esc(String(l.qty).replace('.', ','))}"></label>
-      <label class="f">${esc(t('unitPrice'))}${l.custom ? ` <span class="custom-tag">· ${esc(t('customPrice'))}</span>` : ''}
+      <label class="f pp">${esc(t('unitPrice'))}${l.custom ? ` <span class="custom-tag">· ${esc(t('customPrice'))}</span>` : ''}
         <input data-act="price" class="num" inputmode="decimal" ${l.custom ? '' : 'readonly'} value="${priceSet ? esc(money(num(l.price))) : ''}" placeholder="—"></label>
-      ${l.custom ? `<button type="button" class="btn small" data-act="reset">${esc(t('catalogPrice'))}</button>` : `<button type="button" class="btn small" data-act="custom">${esc(t('changePrice'))}</button>`}
+      ${l.custom ? `<button type="button" class="btn small pp" data-act="reset">${esc(t('catalogPrice'))}</button>` : `<button type="button" class="btn small pp" data-act="custom">${esc(t('changePrice'))}</button>`}
     </div>
-    ${priceSet ? '' : `<div class="noprice">${esc(t('noPrice'))}</div>`}
+    ${priceSet ? '' : `<div class="noprice pp">${esc(t('noPrice'))}</div>`}
   </div>`;
 }
 function renderTemplatePicker() {
@@ -281,7 +284,10 @@ function renderOffer() {
     ${fld('p_dmin', t('dmin'), o.pool.dmin, 'inputmode="decimal"')}${fld('p_dmax', t('dmax'), o.pool.dmax, 'inputmode="decimal"')}
     <label class="f">${esc(t('color'))}<select id="p_color">${(s.colors || []).concat((s.colors || []).includes(o.pool.color) || !o.pool.color ? [] : [o.pool.color]).map((c) => `<option ${c === o.pool.color ? 'selected' : ''}>${esc(c)}</option>`).join('')}</select></label>
   </div><div class="calc" id="poolCalc"></div></section>
-  <section class="card"><h2>${esc(t('composition'))}</h2><p class="hint">${esc(t('compHint'))}</p><div id="lines">`;
+  <section class="card"><h2>${esc(t('composition'))}</h2>
+    <label class="check"><input type="checkbox" id="fixedOn" ${o.fixedTotal ? 'checked' : ''}>${esc(t('fixedTotal'))}</label>
+    <div id="fixedBox" ${o.fixedTotal ? '' : 'hidden'}>${fld('fixedNet', t('fixedNet'), o.fixedNet ?? '', 'inputmode="decimal" class="num" placeholder="0"')}<p class="hint">${esc(t('fixedHint'))}</p></div>
+    <p class="hint">${esc(t('compHint'))}</p><div id="lines" class="${o.fixedTotal ? 'fixed' : ''}">`;
   let lastGroup = null;
   ordered.forEach((l) => {
     const g = catById(l.category)?.group || 'C';
@@ -324,6 +330,13 @@ function renderOffer() {
   bind('t_delivery', (v) => { o.terms.delivery = v; }); bind('t_place', (v) => { o.terms.place = v; });
   bind('t_payment', (v) => { o.terms.payment = v; }); bind('o_discount', (v) => { o.discount = v; });
   bind('t_notinc', (v) => { o.terms.notIncluded = v; });
+  bind('fixedNet', (v) => { o.fixedNet = v; });
+  $('#fixedOn').addEventListener('change', (e) => {
+    o.fixedTotal = e.target.checked; saveDraft();
+    $('#fixedBox').hidden = !o.fixedTotal; $('#lines').classList.toggle('fixed', o.fixedTotal);
+    $('#o_discount').closest('label').hidden = o.fixedTotal; updateTotals();
+  });
+  $('#o_discount').closest('label').hidden = !!o.fixedTotal;
   bind('o_sub', (v) => { o.subtitle_el = v; }); bind('o_sub_en', (v) => { o.subtitle_en = v; });
   $('#pdfLang').value = store.get('pdfLang', 'el');
   $('#pdfLang').onchange = (e) => store.set('pdfLang', e.target.value);
@@ -517,22 +530,23 @@ async function buildDoc(o, L = 'el') {
 
   content.push(heading('2', P.incl));
   const H = (x, al) => ({ text: x, bold: true, color: '#ffffff', fillColor: NAVY, fontSize: 8, alignment: al });
-  const body = [[H(P.n, 'center'), H(P.desc), H(P.qty, 'center'), H(P.war, 'center'), H(P.price, 'right')]];
+  const FX = !!o.fixedTotal;
+  const body = [[H(P.n, 'center'), H(P.desc), H(P.qty, 'center'), H(P.war, 'center'), ...(FX ? [] : [H(P.price, 'right')])]];
   let lastG = null;
   items.forEach((it) => {
-    if (it.g !== lastG) { body.push([{ text: P.groups[it.g], colSpan: 5, bold: true, color: NAVY, fillColor: LIGHT }, {}, {}, {}, {}]); lastG = it.g; }
+    if (it.g !== lastG) { body.push([{ text: P.groups[it.g], colSpan: FX ? 4 : 5, bold: true, color: NAVY, fillColor: LIGHT }, {}, {}, {}, ...(FX ? [] : [{}])]); lastG = it.g; }
     const sum = num(it.l.price) * num(it.l.qty);
     const q = `${d(num(it.l.qty), 0)} ${P.units[it.m.unit] || ''}`.trim();
     body.push([{ text: String(it.n), alignment: 'center' }, it.name, { text: q, alignment: 'center' }, { text: EN ? warEn(it.m.warranty) : (it.m.warranty || '—'), alignment: 'center' },
-      sum === 0 ? { text: P.included, italics: true, color: GREY, alignment: 'right' } : { text: mon(sum), alignment: 'right' }]);
+      ...(FX ? [] : [sum === 0 ? { text: P.included, italics: true, color: GREY, alignment: 'right' } : { text: mon(sum), alignment: 'right' }])]);
   });
-  const tot = (l, v, big) => body.push([{ text: l, colSpan: 4, bold: true, alignment: 'right', fontSize: big ? 11 : 9, color: big ? '#ffffff' : undefined, fillColor: big ? NAVY : undefined }, {}, {}, {},
+  const tot = (l, v, big) => body.push([{ text: l, colSpan: FX ? 3 : 4, bold: true, alignment: 'right', fontSize: big ? 11 : 9, color: big ? '#ffffff' : undefined, fillColor: big ? NAVY : undefined }, {}, {}, ...(FX ? [] : [{}]),
     { text: v, bold: true, alignment: 'right', fontSize: big ? 11 : 9, color: big ? '#ffffff' : undefined, fillColor: big ? NAVY : undefined }]);
-  if (num(o.discount)) tot(P.discount, '−' + mon(num(o.discount)));
+  if (!FX && num(o.discount)) tot(P.discount, '−' + mon(num(o.discount)));
   tot(P.net, mon(c.net));
   tot(`${P.vat} ${d(c.rate, 0)}%`, mon(c.vat));
   tot(P.total, mon(c.total) + ' €', true);
-  content.push({ table: { headerRows: 1, dontBreakRows: true, widths: [24, '*', 52, 62, 78], body }, layout: lay, fontSize: 8.5 });
+  content.push({ table: { headerRows: 1, dontBreakRows: true, widths: FX ? [24, '*', 60, 90] : [24, '*', 52, 62, 78], body }, layout: lay, fontSize: 8.5 });
 
   content.push(heading('3', P.terms));
   content.push({ table: { widths: [150, '*'], body: [
@@ -598,6 +612,7 @@ function pdfName(o, L) {
 async function makePdf(mode, L = 'el') {
   if (!window.pdfMake) return toast(t('pdfLoading'), true);
   const c = totals(offer);
+  if (offer.fixedTotal && !num(offer.fixedNet)) return toast(t('fixedNet'), true);
   if (c.missing.length) return toast(t('pdfMissing') + c.missing.join(', '), true);
   const btn = $(mode === 'share' ? '#shareBtn' : '#pdfBtn'); btn.disabled = true;
   try {
