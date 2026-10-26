@@ -7,7 +7,8 @@
   color-scheme: light;
 }
 * { box-sizing: border-box }
-html { -webkit-text-size-adjust: 100% }
+html { -webkit-text-size-adjust: 100%; overflow-x: hidden }
+body { overflow-x: hidden }
 body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.4 var(--sans);
   padding-top: env(safe-area-inset-top, 0px) }
 button, input, select, textarea { font: inherit; color: inherit }
@@ -24,7 +25,7 @@ button, input, select, textarea { font: inherit; color: inherit }
 .lang button { border: 0; background: var(--card); padding: 7px 11px; font-weight: 600; font-size: 13px; color: var(--muted); cursor: pointer }
 .lang button.on { background: var(--navy); color: #fff }
 
-.tabs { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 4; display: grid; grid-template-columns: repeat(4, 1fr); background: var(--card); border-bottom: 1px solid var(--line);
+.tabs { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 4; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); background: var(--card); border-bottom: 1px solid var(--line);
   padding-left: max(8px, env(safe-area-inset-left, 0px)); padding-right: max(8px, env(safe-area-inset-right, 0px)) }
 .tabs button { border: 0; background: none; padding: 11px 4px 10px; font-size: 13.5px; font-weight: 600; color: var(--muted); border-bottom: 3px solid transparent; cursor: pointer; min-width: 0 }
 .tabs button.on { color: var(--navy); border-bottom-color: var(--orange) }
@@ -36,11 +37,14 @@ main { max-width: 680px; margin: 0 auto; display: grid; gap: 14px;
 .card > h2 { margin: 0; font-size: 12.5px; letter-spacing: .07em; text-transform: uppercase; color: var(--orange); display: flex; justify-content: space-between; gap: 8px; align-items: baseline }
 .card > h2 small { text-transform: none; letter-spacing: 0; font-weight: 400; color: var(--muted); font-size: 12px }
 h1.page { margin: 4px 0 0; font-size: 20px; color: var(--navy) }
-.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px }
-.grid.three { grid-template-columns: repeat(3, 1fr) }
+.grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px }
+.grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)) }
 .full { grid-column: 1 / -1 }
 label.f { display: grid; gap: 4px; font-size: 12.5px; color: var(--muted); min-width: 0 }
 input, select, textarea { width: 100%; font-size: 16px; background: var(--field); border: 1px solid var(--line); border-radius: 8px; padding: 9px 10px; min-width: 0 }
+/* iPhone draws the date field wider than its column; make it a plain box that fits */
+input[type="date"] { -webkit-appearance: none; appearance: none; display: block; min-width: 0; max-width: 100%; height: 42px; text-align: left }
+input[type="date"]::-webkit-date-and-time-value { text-align: left; margin: 0 }
 textarea { min-height: 96px; resize: vertical; line-height: 1.4 }
 input[readonly] { background: var(--navy-soft); border-color: transparent; color: var(--ink); font-weight: 600 }
 input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible { outline: 2px solid var(--navy); outline-offset: 1px }
@@ -110,7 +114,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-
 .toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(86px + env(safe-area-inset-bottom, 0px)); z-index: 9; background: var(--ink); color: #fff; padding: 10px 14px; border-radius: 10px; font-size: 14px; max-width: calc(100% - 32px) }
 .toast.err { background: var(--warn) }
 
-@media (max-width: 430px) { .grid.three { grid-template-columns: 1fr 1fr } .tabs button { font-size: 12.5px } }
+@media (max-width: 430px) { .grid.three { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) } .tabs button { font-size: 12.5px } }
 @media (prefers-reduced-motion: no-preference) { .btn:active { transform: scale(.98) } }
 
 /* PDF preview, full screen */

@@ -1,6 +1,6 @@
 // Offline shell for the installed app. App files: network first (updates show up at once), cache as fallback.
 // Photos and libraries: cache first. API: never cached, except the last catalogue for opening offline.
-const CACHE = 'pisines-v6';
+const CACHE = 'pisines-v7';
 const SHELL = ['/', '/app.js', '/style.css', '/manifest.webmanifest', '/logo.png', '/icon-192.png',
   '/vendor/pdfmake.min.js', '/vendor/vfs_fonts.js', '/vendor/pdf.min.js', '/vendor/pdf.worker.min.js'];
 
