@@ -19,7 +19,7 @@ const T = {
     net: 'Без НДС', vat: 'НДС', total: 'Итого с НДС',
     pdf: 'PDF', save: 'Сохранить', saved: 'Сохранено', newOffer: 'Новое', duplicate: 'Копия',
     newConfirm: 'Нажмите ещё раз: начнётся новое предложение.', pdfMissing: 'Нет цены у позиций: ', pdfReady: 'PDF готов', pdfLoading: 'Генератор PDF ещё загружается, подождите пару секунд',
-    share: 'Отправить', download: 'Скачать', sendApps: 'Отправить', sendMail: 'Почта', mailCopied: 'Email клиента скопирован — вставьте его в поле «Кому»', mailAttach: 'PDF скачан — приложите его к письму',
+    share: 'Отправить', download: 'Скачать', sendApps: 'Отправить',
     appCard: 'Приложение', appHint: 'Установите сайт как приложение: оно откроется с иконки на экране, на весь экран, и покажет последний каталог даже без интернета.', appInstall: 'Установить приложение', appInstalled: 'Приложение установлено ✓', appIos: 'На iPhone: откройте сайт в Safari → кнопка «Поделиться» → «На экран Домой».', appOther: 'Если кнопки нет: меню браузера (⋮) → «Установить приложение» или «Добавить на главный экран».',
     materials: 'Справочник материалов', matHint: 'Здесь хранятся материалы и их цены. В предложении цена подставится сама.', search: 'Поиск', newMaterial: '+ Новый материал', editCategories: 'Категории',
     matEdit: 'Материал', category: 'Категория', nameEl: 'Название (греч.) — идёт в PDF', nameRu: 'Название (рус.)', unit: 'Единица', defQty: 'Кол-во по умолч.', price: 'Цена за ед. без НДС, €', warranty: 'Гарантия (греч.)', desc: 'Описание для PDF (греч.). Пустая строка = новый абзац. {color} = цвет мембраны', photo: 'Фото', uploadPhoto: 'Загрузить фото', dropPhoto: 'или перетащите файл с фото сюда', dropBad: 'Это не картинка', removePhoto: 'Убрать фото', isDefault: 'Добавлять в новое предложение автоматически', del: 'Удалить', delConfirm: 'Нажмите ещё раз для удаления', back: '← Назад',
@@ -49,7 +49,7 @@ const T = {
     net: 'Καθαρή αξία', vat: 'ΦΠΑ', total: 'Σύνολο με ΦΠΑ',
     pdf: 'PDF', save: 'Αποθήκευση', saved: 'Αποθηκεύτηκε', newOffer: 'Νέα', duplicate: 'Αντίγραφο',
     newConfirm: 'Πατήστε ξανά για νέα προσφορά.', pdfMissing: 'Χωρίς τιμή: ', pdfReady: 'Το PDF είναι έτοιμο', pdfLoading: 'Η δημιουργία PDF φορτώνει, περιμένετε λίγο',
-    share: 'Αποστολή', download: 'Λήψη', sendApps: 'Αποστολή', sendMail: 'Email', mailCopied: 'Το email του πελάτη αντιγράφηκε — επικολλήστε το στο «Προς»', mailAttach: 'Το PDF κατέβηκε — επισυνάψτε το στο email',
+    share: 'Αποστολή', download: 'Λήψη', sendApps: 'Αποστολή',
     appCard: 'Εφαρμογή', appHint: 'Εγκαταστήστε τον ιστότοπο ως εφαρμογή: ανοίγει από εικονίδιο, σε πλήρη οθόνη, και δείχνει τον τελευταίο κατάλογο και χωρίς internet.', appInstall: 'Εγκατάσταση εφαρμογής', appInstalled: 'Η εφαρμογή είναι εγκατεστημένη ✓', appIos: 'Σε iPhone: ανοίξτε τον ιστότοπο στο Safari → «Κοινοποίηση» → «Προσθήκη στην οθόνη Αφετηρίας».', appOther: 'Αν δεν υπάρχει κουμπί: μενού του browser (⋮) → «Εγκατάσταση εφαρμογής».',
     materials: 'Κατάλογος υλικών', matHint: 'Εδώ φυλάσσονται τα υλικά και οι τιμές τους. Στην προσφορά η τιμή μπαίνει αυτόματα.', search: 'Αναζήτηση', newMaterial: '+ Νέο υλικό', editCategories: 'Κατηγορίες',
     matEdit: 'Υλικό', category: 'Κατηγορία', nameEl: 'Όνομα (ελληνικά) — στο PDF', nameRu: 'Όνομα (ρωσικά)', unit: 'Μονάδα', defQty: 'Προεπιλ. ποσότητα', price: 'Τιμή μονάδας χωρίς ΦΠΑ, €', warranty: 'Εγγύηση', desc: 'Περιγραφή για το PDF. Κενή γραμμή = νέα παράγραφος. {color} = χρώμα μεμβράνης', photo: 'Φωτογραφία', uploadPhoto: 'Ανέβασμα φωτογραφίας', dropPhoto: 'ή σύρετε εδώ το αρχείο της φωτογραφίας', dropBad: 'Δεν είναι εικόνα', removePhoto: 'Αφαίρεση φωτογραφίας', isDefault: 'Μπαίνει αυτόματα σε νέα προσφορά', del: 'Διαγραφή', delConfirm: 'Πατήστε ξανά για διαγραφή', back: '← Πίσω',
@@ -608,7 +608,7 @@ function pdfName(o, L) {
   return `${L === 'en' ? 'Offer' : 'Prosfora'}_${String(o.no || '').replace(/\//g, '-')}_${who}.pdf`;
 }
 // ---------- PDF preview and sending ----------
-// The PDF button opens a full-screen preview; language and signature are switched there, then download / share / email.
+// The PDF button opens a full-screen preview; language and signature are switched there, then download or share.
 let pv = null, pvRun = 0;
 const canShareFiles = () => Boolean(navigator.canShare && navigator.canShare({ files: [new File(['x'], 'x.pdf', { type: 'application/pdf' })] }));
 
@@ -633,7 +633,7 @@ function closePreview(fromHistory) {
 async function renderPreview() {
   const run = ++pvRun, L = store.get('pdfLang', 'el'), sign = Boolean(DB.settings.signImg) && $('#pvSign').checked;
   $$('[data-pvlang]').forEach((b) => b.classList.toggle('on', b.dataset.pvlang === L));
-  ['#pvDl', '#pvMail', '#pvShare'].forEach((x) => { $(x).disabled = true; });
+  ['#pvDl', '#pvShare'].forEach((x) => { $(x).disabled = true; });
   const box = $('#pvPages'); box.innerHTML = '<p class="loading">…</p>';
   try {
     const doc = await buildDoc(offer, L, sign);
@@ -656,7 +656,7 @@ async function renderPreview() {
     } else {
       box.innerHTML = `<iframe title="PDF" src="${URL.createObjectURL(blob)}"></iframe>`;
     }
-    ['#pvDl', '#pvMail', '#pvShare'].forEach((x) => { $(x).disabled = false; });
+    ['#pvDl', '#pvShare'].forEach((x) => { $(x).disabled = false; });
   } catch (e) { if (run === pvRun) box.innerHTML = `<p class="hint">${esc(String(e.message || e))}</p>`; }
 }
 function pvDownload() {
@@ -664,38 +664,17 @@ function pvDownload() {
   const a = document.createElement('a'); a.href = url; a.download = pv.name; document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 30000);
 }
-function mailText(L) {
-  const s = DB.settings, en = L === 'en';
-  const subject = `${en ? 'Commercial offer' : 'Οικονομική προσφορά'} ${offer.no || ''} · ${(en && s.company_en) || s.company || ''}`.trim();
-  const body = en
-    ? `Hello${offer.client ? ' ' + offer.client : ''},\n\nPlease find attached our commercial offer no. ${offer.no || ''}.\nWe are at your disposal for any further information.\n\nKind regards,\n${s.signatory_en || s.signatory || ''}\n${s.company_en || s.company || ''}\n${s.phones || ''}`
-    : `Καλησπέρα σας${offer.client ? ' ' + offer.client : ''},\n\nσας στέλνουμε συνημμένη την οικονομική προσφορά αρ. ${offer.no || ''}.\nΕίμαστε στη διάθεσή σας για κάθε πληροφορία.\n\nΜε εκτίμηση,\n${s.signatory || ''}\n${s.company || ''}\n${s.phones || ''}`;
-  return { subject, body };
-}
-async function pvShare(withText) {
+async function pvShare() {
   const file = new File([pv.blob], pv.name, { type: 'application/pdf' });
-  const m = mailText(pv.L);
-  try { await navigator.share(withText ? { files: [file], title: m.subject, text: m.body } : { files: [file], title: pv.name }); }
+  try { await navigator.share({ files: [file], title: pv.name }); }
   catch (e) { if (e.name !== 'AbortError') toast(String(e.message || e), true); }
-}
-async function pvMail() {
-  const m = mailText(pv.L), to = (offer.email || '').trim();
-  if (canShareFiles()) {
-    // phones: the share sheet attaches the PDF; the address can't be pre-filled there, so it goes to the clipboard
-    if (to) { try { await navigator.clipboard.writeText(to); toast(t('mailCopied')); } catch (e) { /* no clipboard: the address is still in the offer */ } }
-    return pvShare(true);
-  }
-  pvDownload();
-  location.href = `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(m.subject)}&body=${encodeURIComponent(m.body)}`;
-  toast(t('mailAttach'));
 }
 function initPreview() {
   $('#pvClose').onclick = () => closePreview();
   $$('[data-pvlang]').forEach((b) => b.addEventListener('click', () => { store.set('pdfLang', b.dataset.pvlang); renderPreview(); }));
   $('#pvSign').onchange = (e) => { store.set('pdfSign', e.target.checked); renderPreview(); };
   $('#pvDl').onclick = () => { pvDownload(); toast(t('pdfReady')); };
-  $('#pvShare').onclick = () => (canShareFiles() ? pvShare(false) : (pvDownload(), toast(t('pdfReady'))));
-  $('#pvMail').onclick = pvMail;
+  $('#pvShare').onclick = () => (canShareFiles() ? pvShare() : (pvDownload(), toast(t('pdfReady'))));
   window.addEventListener('popstate', () => closePreview(true));
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closePreview(); });
 }
