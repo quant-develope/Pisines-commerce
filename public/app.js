@@ -30,7 +30,7 @@ const T = {
     defaults: 'Условия по умолчанию', colors: 'Цвета мембраны (через запятую)', nextNo: 'Следующий номер', changePin: 'Сменить PIN', newPin: 'Новый PIN', saveSettings: 'Сохранить настройки', logout: 'Выйти на этом телефоне',
     netErr: 'Нет связи с сервером. Изменения сохранены на телефоне.', unsavedPrice: 'нет цены',
     fixedTotal: 'Указать итоговую цену вручную (без цен по материалам)', fixedNet: 'Итоговая цена без НДС, €', fixedHint: 'НДС добавится сам. В PDF будут позиции без цен и итог.',
-    chooseTemplate: 'Выберите шаблон', chooseTemplateHint: 'Состав и подзаголовок подставятся из шаблона. Позиции можно добавлять и удалять, но только в этом предложении: шаблон не меняется.', emptyTemplate: 'Без шаблона (только позиции «по умолчанию»)', positions: 'позиций',
+    chooseTemplate: 'Выберите шаблон', chooseTemplateHint: 'Состав и подзаголовок подставятся из шаблона. Позиции можно добавлять и удалять, но только в этом предложении: шаблон не меняется.', emptyTemplate: 'Новое предложение (заполнить самостоятельно)', emptyTemplateHint: 'Без позиций: добавьте их сами кнопкой «+ Добавить позицию»', continueDraft: 'Продолжить начатое', positions: 'позиций',
     saveAsTemplate: 'Сохранить состав как шаблон', tplOverwrite: 'Заменить шаблон', tplNew: 'Новый шаблон', tplName: 'Название шаблона', tplSaved: 'Шаблон сохранён', templates: 'Шаблоны', tplDelete: 'Удалить шаблон', template: 'Шаблон',
     pdfLang: 'Язык PDF', pdfSign: 'Подпись в PDF', signShort: 'Подпись', english: 'Английский (для PDF на EN)', nameEn: 'Название (англ.) — для PDF на английском', descEn: 'Описание для PDF на английском', subtitleOffer: 'Подзаголовок (греч.)', subtitleEn: 'Подзаголовок (англ.)',
   },
@@ -60,7 +60,7 @@ const T = {
     defaults: 'Προεπιλεγμένοι όροι', colors: 'Χρώματα μεμβράνης (με κόμμα)', nextNo: 'Επόμενος αριθμός', changePin: 'Αλλαγή PIN', newPin: 'Νέο PIN', saveSettings: 'Αποθήκευση ρυθμίσεων', logout: 'Έξοδος σε αυτό το κινητό',
     netErr: 'Δεν υπάρχει σύνδεση. Οι αλλαγές κρατήθηκαν στο κινητό.', unsavedPrice: 'χωρίς τιμή',
     fixedTotal: 'Συνολική τιμή χειροκίνητα (χωρίς τιμές ανά υλικό)', fixedNet: 'Συνολική τιμή χωρίς ΦΠΑ, €', fixedHint: 'Ο ΦΠΑ προστίθεται αυτόματα. Στο PDF εμφανίζονται οι θέσεις χωρίς τιμές και το σύνολο.',
-    chooseTemplate: 'Επιλέξτε πρότυπο', chooseTemplateHint: 'Το περιεχόμενο και ο υπότιτλος έρχονται από το πρότυπο. Οι αλλαγές ισχύουν μόνο για αυτή την προσφορά: το πρότυπο δεν αλλάζει.', emptyTemplate: 'Χωρίς πρότυπο (μόνο τα προεπιλεγμένα)', positions: 'θέσεις',
+    chooseTemplate: 'Επιλέξτε πρότυπο', chooseTemplateHint: 'Το περιεχόμενο και ο υπότιτλος έρχονται από το πρότυπο. Οι αλλαγές ισχύουν μόνο για αυτή την προσφορά: το πρότυπο δεν αλλάζει.', emptyTemplate: 'Νέα προσφορά (συμπλήρωση από την αρχή)', emptyTemplateHint: 'Χωρίς θέσεις: προσθέστε τις με «+ Προσθήκη θέσης»', continueDraft: 'Συνέχεια της τρέχουσας', positions: 'θέσεις',
     saveAsTemplate: 'Αποθήκευση ως πρότυπο', tplOverwrite: 'Αντικατάσταση προτύπου', tplNew: 'Νέο πρότυπο', tplName: 'Όνομα προτύπου', tplSaved: 'Το πρότυπο αποθηκεύτηκε', templates: 'Πρότυπα', tplDelete: 'Διαγραφή προτύπου', template: 'Πρότυπο',
     pdfLang: 'Γλώσσα PDF', pdfSign: 'Υπογραφή στο PDF', signShort: 'Υπογρ.', english: 'Αγγλικά (για PDF στα αγγλικά)', nameEn: 'Όνομα (αγγλικά) — για PDF στα αγγλικά', descEn: 'Περιγραφή για PDF στα αγγλικά', subtitleOffer: 'Υπότιτλος (ελληνικά)', subtitleEn: 'Υπότιτλος (αγγλικά)',
   },
@@ -111,6 +111,7 @@ async function api(path, opts = {}) {
 let DB = { categories: [], materials: [], settings: {}, offers: [] };
 let view = store.get('view', 'offer');
 let offer = null; // current draft
+let editing = store.get('editing', false); // offer form open (vs. template list)
 const catById = (id) => DB.categories.find((c) => c.id === id);
 const matById = (id) => DB.materials.find((m) => m.id === id);
 const nameOf = (m) => (lang === 'ru' && m.ru ? m.ru : m.el);
@@ -138,7 +139,6 @@ function newOffer(tplId) {
   const tpl = (s.templates || []).find((x) => x.id === tplId);
   const lines = [];
   if (tpl) tpl.materials.map(tplItem).forEach(({ id, qty }) => { const m = matById(id); if (!m) return; const l = lineFromMaterial(m); if (qty != null) { l.qty = qty; l.qtyManual = true; } lines.push(l); });
-  else DB.categories.forEach((c) => DB.materials.filter((m) => m.category === c.id && m.default).forEach((m) => lines.push(lineFromMaterial(m))));
   return {
     id: null, template: tpl ? tpl.id : '', subtitle_el: tpl ? tpl.subtitle_el : (s.subtitle || ''), subtitle_en: tpl ? tpl.subtitle_en : (s.subtitle_en || ''),
     no: offerNo(s.nextNo || 1), date: today(), client: '', phone: '', email: '', site: '',
@@ -193,12 +193,14 @@ function applyLang() {
   $$('[data-lang]').forEach((b) => b.classList.toggle('on', b.dataset.lang === lang));
 }
 $$('[data-lang]').forEach((b) => b.addEventListener('click', () => { lang = b.dataset.lang; store.set('lang', lang); applyLang(); if (token && DB.categories.length) show(view); else boot(); }));
-$$('#tabs button').forEach((b) => b.addEventListener('click', () => show(b.dataset.view)));
+$$('#tabs button').forEach((b) => b.addEventListener('click', () => show(b.dataset.view, true)));
 
-function show(v) {
+// «Предложение» starts at the template list; the form opens after a template (or an empty offer) is picked.
+function show(v, fresh) {
   view = v; store.set('view', v);
   $$('#tabs button').forEach((b) => b.classList.toggle('on', b.dataset.view === v));
-  ({ offer: renderOffer, materials: renderMaterials, archive: renderArchive, settings: renderSettings }[v] || renderOffer)();
+  const offerView = () => (fresh || !editing || !offer ? renderTemplatePicker() : renderOffer());
+  ({ offer: offerView, materials: renderMaterials, archive: renderArchive, settings: renderSettings }[v] || renderOffer)();
   window.scrollTo(0, 0);
 }
 
@@ -258,16 +260,18 @@ function lineHtml(l) {
   </div>`;
 }
 function renderTemplatePicker() {
+  editing = false; store.set('editing', false);
   const tpls = DB.settings.templates || [];
   $('#app').innerHTML = `<h1 class="page">${esc(t('chooseTemplate'))}</h1><p class="hint">${esc(t('chooseTemplateHint'))}</p>
     ${tpls.map((x) => `<button type="button" class="card tpl" data-tpl="${esc(x.id)}"><b>${esc(lang === 'ru' ? x.ru || x.el : x.el)}</b><span>${esc(x.subtitle_el || '')}</span><span>${x.materials.filter((y) => matById(tplItem(y).id)).length} ${esc(t('positions'))}</span></button>`).join('')}
-    <button type="button" class="card tpl" data-tpl=""><b>${esc(t('emptyTemplate'))}</b></button>
-    ${offer ? `<button class="btn link" id="tplBack" type="button">${esc(t('back'))}</button>` : ''}`;
+    <button type="button" class="card tpl" data-tpl=""><b>${esc(t('emptyTemplate'))}</b><span>${esc(t('emptyTemplateHint'))}</span></button>
+    ${offer ? `<button type="button" class="card tpl" id="tplBack"><b>${esc(t('continueDraft'))}: ${esc(offer.no || '')}${offer.client ? ' · ' + esc(offer.client) : ''}</b></button>` : ''}`;
   $$('[data-tpl]').forEach((b) => b.addEventListener('click', () => { offer = newOffer(b.dataset.tpl); saveDraft(); renderOffer(); window.scrollTo(0, 0); }));
   if ($('#tplBack')) $('#tplBack').onclick = renderOffer;
 }
 function renderOffer() {
   if (!offer) return renderTemplatePicker();
+  editing = true; store.set('editing', true);
   const o = offer, s = DB.settings;
   totals(o); // fills auto quantities (perimeter / area) before drawing
   const groups = ['A', 'B', 'C'];
@@ -506,7 +510,9 @@ async function buildDoc(o, L = 'el', withSign = false) {
 
   content.push(heading('2', P.incl));
   const H = (x, al) => ({ text: x, bold: true, color: '#ffffff', fillColor: NAVY, fontSize: 8, alignment: al });
-  const FX = !!o.fixedTotal;
+  // no price column when the total is typed by hand or no line has a price; lines without a price print «—»
+  const priced = o.lines.some((l) => hasNum(l.price));
+  const FX = !!o.fixedTotal || !priced, showTot = o.fixedTotal ? num(o.fixedNet) > 0 : priced;
   const body = [[H(P.n, 'center'), H(P.desc), H(P.qty, 'center'), H(P.war, 'center'), ...(FX ? [] : [H(P.price, 'right')])]];
   let lastG = null;
   items.forEach((it) => {
@@ -514,14 +520,16 @@ async function buildDoc(o, L = 'el', withSign = false) {
     const sum = num(it.l.price) * num(it.l.qty);
     const q = `${d(num(it.l.qty), 0)} ${P.units[it.m.unit] || ''}`.trim();
     body.push([{ text: String(it.n), alignment: 'center' }, it.name, { text: q, alignment: 'center' }, { text: EN ? warEn(it.m.warranty) : (it.m.warranty || '—'), alignment: 'center' },
-      ...(FX ? [] : [sum === 0 ? { text: P.included, italics: true, color: GREY, alignment: 'right' } : { text: mon(sum), alignment: 'right' }])]);
+      ...(FX ? [] : [!hasNum(it.l.price) ? { text: '—', alignment: 'right' } : sum === 0 ? { text: P.included, italics: true, color: GREY, alignment: 'right' } : { text: mon(sum), alignment: 'right' }])]);
   });
   const tot = (l, v, big) => body.push([{ text: l, colSpan: FX ? 3 : 4, bold: true, alignment: 'right', fontSize: big ? 11 : 9, color: big ? '#ffffff' : undefined, fillColor: big ? NAVY : undefined }, {}, {}, ...(FX ? [] : [{}]),
     { text: v, bold: true, alignment: 'right', fontSize: big ? 11 : 9, color: big ? '#ffffff' : undefined, fillColor: big ? NAVY : undefined }]);
-  if (!FX && num(o.discount)) tot(P.discount, '−' + mon(num(o.discount)));
-  tot(P.net, mon(c.net));
-  tot(`${P.vat} ${d(c.rate, 0)}%`, mon(c.vat));
-  tot(P.total, mon(c.total) + ' €', true);
+  if (showTot) {
+    if (!o.fixedTotal && num(o.discount)) tot(P.discount, '−' + mon(num(o.discount)));
+    tot(P.net, mon(c.net));
+    tot(`${P.vat} ${d(c.rate, 0)}%`, mon(c.vat));
+    tot(P.total, mon(c.total) + ' €', true);
+  }
   content.push({ table: { headerRows: 1, dontBreakRows: true, widths: FX ? [24, '*', 60, 90] : [24, '*', 52, 62, 78], body }, layout: lay, fontSize: 8.5 });
 
   content.push(heading('3', P.terms));
@@ -594,9 +602,6 @@ const canShareFiles = () => Boolean(navigator.canShare && navigator.canShare({ f
 
 async function openPreview() {
   if (!window.pdfMake) return toast(t('pdfLoading'), true);
-  const c = totals(offer);
-  if (offer.fixedTotal && !num(offer.fixedNet)) return toast(t('fixedNet'), true);
-  if (c.missing.length) return toast(t('pdfMissing') + c.missing.join(', '), true);
   try { await saveOffer(true); } catch (e) { /* saving is best effort; the PDF is built from the screen */ }
   $('#pvSignBox').hidden = !DB.settings.signImg;
   $('#pvSign').checked = store.get('pdfSign', true) !== false;
@@ -780,7 +785,7 @@ function renderArchive() {
       <div class="row end"><button class="btn small" data-open="${esc(o.id)}" type="button">${esc(t('open'))}</button><button class="btn small danger" data-del="${esc(o.id)}" type="button">${esc(t('del'))}</button></div></div>`).join('')
       : `<p class="hint">${esc(t('archiveEmpty'))}</p>`}</section>`;
   $$('[data-open]').forEach((b) => b.addEventListener('click', async () => {
-    try { const r = await api('/offers/' + b.dataset.open); offer = r.offer; saveDraft(); show('offer'); } catch (e) { toast(t('netErr'), true); }
+    try { const r = await api('/offers/' + b.dataset.open); offer = r.offer; saveDraft(); editing = true; show('offer'); } catch (e) { toast(t('netErr'), true); }
   }));
   $$('[data-del]').forEach((b) => b.addEventListener('click', (e) => confirmTap(e.currentTarget, t('delConfirm'), async () => {
     try { await api('/offers/' + b.dataset.del, { method: 'DELETE' }); DB.offers = DB.offers.filter((o) => o.id !== b.dataset.del); if (offer && offer.id === b.dataset.del) offer.id = null; renderArchive(); }
