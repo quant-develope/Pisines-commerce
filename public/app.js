@@ -28,6 +28,9 @@ const T = {
     settings: 'Настройки', company: 'Компания (шапка PDF)', companyName: 'Название', tagline: 'Подпись', address: 'Адрес', phones: 'Телефоны', sites: 'Сайты', signatory: 'Подписант', subtitle: 'Подзаголовок предложения',
     defaults: 'Условия по умолчанию', colors: 'Цвета мембраны (через запятую)', nextNo: 'Следующий номер', changePin: 'Сменить PIN', newPin: 'Новый PIN', saveSettings: 'Сохранить настройки', logout: 'Выйти на этом телефоне',
     netErr: 'Нет связи с сервером. Изменения сохранены на телефоне.', unsavedPrice: 'нет цены',
+    chooseTemplate: 'Выберите шаблон', chooseTemplateHint: 'Состав и подзаголовок подставятся из шаблона. Потом всё можно поменять.', emptyTemplate: 'Без шаблона (только позиции «по умолчанию»)', positions: 'позиций',
+    saveAsTemplate: 'Сохранить состав как шаблон', tplOverwrite: 'Заменить шаблон', tplNew: 'Новый шаблон', tplName: 'Название шаблона', tplSaved: 'Шаблон сохранён', templates: 'Шаблоны', tplDelete: 'Удалить шаблон', template: 'Шаблон',
+    pdfLang: 'Язык PDF', english: 'Английский (для PDF на EN)', nameEn: 'Название (англ.) — для PDF на английском', descEn: 'Описание для PDF на английском', subtitleOffer: 'Подзаголовок (греч.)', subtitleEn: 'Подзаголовок (англ.)',
   },
   el: {
     appName: 'Οικονομικές προσφορές', tabOffer: 'Προσφορά', tabMaterials: 'Υλικά', tabArchive: 'Αρχείο', tabSettings: 'Ρυθμίσεις',
@@ -53,6 +56,9 @@ const T = {
     settings: 'Ρυθμίσεις', company: 'Εταιρεία (κεφαλίδα PDF)', companyName: 'Όνομα', tagline: 'Υπότιτλος', address: 'Διεύθυνση', phones: 'Τηλέφωνα', sites: 'Ιστοσελίδες', signatory: 'Υπογράφων', subtitle: 'Υπότιτλος προσφοράς',
     defaults: 'Προεπιλεγμένοι όροι', colors: 'Χρώματα μεμβράνης (με κόμμα)', nextNo: 'Επόμενος αριθμός', changePin: 'Αλλαγή PIN', newPin: 'Νέο PIN', saveSettings: 'Αποθήκευση ρυθμίσεων', logout: 'Έξοδος σε αυτό το κινητό',
     netErr: 'Δεν υπάρχει σύνδεση. Οι αλλαγές κρατήθηκαν στο κινητό.', unsavedPrice: 'χωρίς τιμή',
+    chooseTemplate: 'Επιλέξτε πρότυπο', chooseTemplateHint: 'Το περιεχόμενο και ο υπότιτλος έρχονται από το πρότυπο. Μετά αλλάζουν ελεύθερα.', emptyTemplate: 'Χωρίς πρότυπο (μόνο τα προεπιλεγμένα)', positions: 'θέσεις',
+    saveAsTemplate: 'Αποθήκευση ως πρότυπο', tplOverwrite: 'Αντικατάσταση προτύπου', tplNew: 'Νέο πρότυπο', tplName: 'Όνομα προτύπου', tplSaved: 'Το πρότυπο αποθηκεύτηκε', templates: 'Πρότυπα', tplDelete: 'Διαγραφή προτύπου', template: 'Πρότυπο',
+    pdfLang: 'Γλώσσα PDF', english: 'Αγγλικά (για PDF στα αγγλικά)', nameEn: 'Όνομα (αγγλικά) — για PDF στα αγγλικά', descEn: 'Περιγραφή για PDF στα αγγλικά', subtitleOffer: 'Υπότιτλος (ελληνικά)', subtitleEn: 'Υπότιτλος (αγγλικά)',
   },
 };
 const UNIT_EL = { pcs: 'τεμ.', set: 'σετ', m: 'm', m2: 'm²', perim: 'm', area: 'm²' };
@@ -122,12 +128,15 @@ function offerNo(n) { return `${String(n).padStart(3, '0')}/${today().slice(0, 4
 function lineFromMaterial(m) {
   return { key: Math.random().toString(36).slice(2), matId: m.id, category: m.category, qty: m.qty ?? 1, qtyManual: false, price: m.price ?? null, custom: false };
 }
-function newOffer() {
+function newOffer(tplId) {
   const s = DB.settings;
+  const tpl = (s.templates || []).find((x) => x.id === tplId);
   const lines = [];
-  DB.categories.forEach((c) => DB.materials.filter((m) => m.category === c.id && m.default).forEach((m) => lines.push(lineFromMaterial(m))));
+  if (tpl) tpl.materials.map(matById).filter(Boolean).forEach((m) => lines.push(lineFromMaterial(m)));
+  else DB.categories.forEach((c) => DB.materials.filter((m) => m.category === c.id && m.default).forEach((m) => lines.push(lineFromMaterial(m))));
   return {
-    id: null, no: offerNo(s.nextNo || 1), date: today(), client: '', phone: '', email: '', site: '',
+    id: null, template: tpl ? tpl.id : '', subtitle_el: tpl ? tpl.subtitle_el : (s.subtitle || ''), subtitle_en: tpl ? tpl.subtitle_en : (s.subtitle_en || ''),
+    no: offerNo(s.nextNo || 1), date: today(), client: '', phone: '', email: '', site: '',
     pool: { len: '6', wid: '3', dmin: '1,5', dmax: '1,5', turn: '4', color: (s.colors || [])[0] || '' },
     lines, discount: '',
     terms: { validDays: s.validDays ?? 30, vatRate: s.vatRate ?? 24, delivery: s.delivery || '', place: s.place || '', payment: s.payment || '', notIncluded: s.notIncluded || '' },
@@ -168,7 +177,7 @@ async function boot() {
     catch { $('#app').innerHTML = `<p class="hint">${esc(t('netErr'))}</p>`; return; }
   }
   try { DB = await api('/data'); } catch (e) { if (e.code === 'auth') return; $('#app').innerHTML = `<p class="hint">${esc(t('netErr'))}</p>`; return; }
-  offer = store.get('draft', null) || newOffer();
+  offer = store.get('draft', null);
   $('#tabs').hidden = false;
   show(view);
 }
@@ -242,13 +251,24 @@ function lineHtml(l) {
     ${priceSet ? '' : `<div class="noprice">${esc(t('noPrice'))}</div>`}
   </div>`;
 }
+function renderTemplatePicker() {
+  const tpls = DB.settings.templates || [];
+  $('#app').innerHTML = `<h1 class="page">${esc(t('chooseTemplate'))}</h1><p class="hint">${esc(t('chooseTemplateHint'))}</p>
+    ${tpls.map((x) => `<button type="button" class="card tpl" data-tpl="${esc(x.id)}"><b>${esc(lang === 'ru' ? x.ru || x.el : x.el)}</b><span>${esc(x.subtitle_el || '')}</span><span>${x.materials.filter(matById).length} ${esc(t('positions'))}</span></button>`).join('')}
+    <button type="button" class="card tpl" data-tpl=""><b>${esc(t('emptyTemplate'))}</b></button>
+    ${offer ? `<button class="btn link" id="tplBack" type="button">${esc(t('back'))}</button>` : ''}`;
+  $$('[data-tpl]').forEach((b) => b.addEventListener('click', () => { offer = newOffer(b.dataset.tpl); saveDraft(); renderOffer(); window.scrollTo(0, 0); }));
+  if ($('#tplBack')) $('#tplBack').onclick = renderOffer;
+}
 function renderOffer() {
+  if (!offer) return renderTemplatePicker();
   const o = offer, s = DB.settings;
   const groups = ['A', 'B', 'C'];
   const ordered = [];
   groups.forEach((g) => DB.categories.filter((c) => c.group === g).forEach((c) => o.lines.filter((l) => l.category === c.id).forEach((l) => ordered.push(l))));
   o.lines.filter((l) => !ordered.includes(l)).forEach((l) => ordered.push(l));
-  let html = `<h1 class="page">${esc(t('tabOffer'))} ${esc(o.no)}</h1>
+  const tplName = (() => { const x = (s.templates || []).find((y) => y.id === o.template); return x ? (lang === 'ru' ? x.ru || x.el : x.el) : ''; })();
+  let html = `<h1 class="page">${esc(t('tabOffer'))} ${esc(o.no)}</h1>${tplName ? `<p class="hint">${esc(t('template'))}: ${esc(tplName)}</p>` : ''}
   <section class="card"><h2>${esc(t('client'))}</h2><div class="grid">
     ${fld('o_no', t('offerNo'), o.no)}${fld('o_date', t('date'), o.date, 'type="date"')}
     <div class="full">${fld('o_client', t('clientName'), o.client)}</div>
@@ -278,10 +298,17 @@ function renderOffer() {
     <div class="full">${fld('t_payment', t('payment'), o.terms.payment)}</div>
     ${fld('o_discount', t('discount'), o.discount, 'inputmode="decimal" placeholder="0"')}
     <label class="f full">${esc(t('notIncluded'))}<textarea id="t_notinc">${esc(o.terms.notIncluded)}</textarea></label>
+    <div class="full">${fld('o_sub', t('subtitleOffer'), o.subtitle_el ?? s.subtitle ?? '')}</div>
+    <div class="full">${fld('o_sub_en', t('subtitleEn'), o.subtitle_en ?? s.subtitle_en ?? '')}</div>
   </div></section>
+  <section class="card"><h2>${esc(t('saveAsTemplate'))}</h2><div class="grid">
+    <label class="f full">${esc(t('template'))}<select id="tplTarget"><option value="">${esc(t('tplNew'))}</option>${(s.templates || []).map((x) => `<option value="${esc(x.id)}" ${x.id === o.template ? 'selected' : ''}>${esc(t('tplOverwrite'))}: ${esc(lang === 'ru' ? x.ru || x.el : x.el)}</option>`).join('')}</select></label>
+    <div class="full" id="tplNameBox">${fld('tplName', t('tplName'), '')}</div>
+  </div><div class="row"><button class="btn" id="tplSave" type="button">${esc(t('saveAsTemplate'))}</button></div></section>
   <div class="row"><button class="btn" id="saveBtn" type="button">${esc(t('save'))}</button><button class="btn" id="dupBtn" type="button">${esc(t('duplicate'))}</button><button class="btn" id="newBtn" type="button">${esc(t('newOffer'))}</button></div>
   <div class="bar"><div class="in"><div class="tot"><span id="totSub"></span><b id="totVal"></b></div>
     <button class="btn" id="shareBtn" type="button" hidden>${esc(t('share'))}</button>
+    <select id="pdfLang" aria-label="${esc(t('pdfLang'))}" style="width:auto"><option value="el">ΕΛ</option><option value="en">EN</option></select>
     <button class="btn main" id="pdfBtn" type="button">${esc(t('pdf'))}</button></div></div>`;
   $('#app').innerHTML = html;
   if (navigator.canShare && navigator.canShare({ files: [new File(['x'], 'x.pdf', { type: 'application/pdf' })] })) $('#shareBtn').hidden = false;
@@ -295,6 +322,25 @@ function renderOffer() {
   bind('t_delivery', (v) => { o.terms.delivery = v; }); bind('t_place', (v) => { o.terms.place = v; });
   bind('t_payment', (v) => { o.terms.payment = v; }); bind('o_discount', (v) => { o.discount = v; });
   bind('t_notinc', (v) => { o.terms.notIncluded = v; });
+  bind('o_sub', (v) => { o.subtitle_el = v; }); bind('o_sub_en', (v) => { o.subtitle_en = v; });
+  $('#pdfLang').value = store.get('pdfLang', 'el');
+  $('#pdfLang').onchange = (e) => store.set('pdfLang', e.target.value);
+  const syncTplName = () => { $('#tplNameBox').hidden = $('#tplTarget').value !== ''; };
+  $('#tplTarget').onchange = syncTplName; syncTplName();
+  $('#tplSave').onclick = async () => {
+    const tpls = structuredClone(DB.settings.templates || []);
+    const target = $('#tplTarget').value;
+    const mats = o.lines.map((l) => l.matId).filter((id, i, a) => matById(id) && a.indexOf(id) === i);
+    if (target) {
+      const x = tpls.find((y) => y.id === target); Object.assign(x, { materials: mats, subtitle_el: o.subtitle_el, subtitle_en: o.subtitle_en });
+    } else {
+      const name = $('#tplName').value.trim(); if (!name) return toast(t('tplName'), true);
+      tpls.push({ id: 't' + Date.now().toString(36), ru: name, el: name, subtitle_el: o.subtitle_el, subtitle_en: o.subtitle_en, materials: mats });
+      o.template = tpls[tpls.length - 1].id;
+    }
+    const ns = { ...DB.settings, templates: tpls };
+    try { await api('/settings', { method: 'PUT', body: { settings: ns } }); DB.settings = ns; saveDraft(); toast(t('tplSaved')); renderOffer(); } catch (e) { toast(t('netErr'), true); }
+  };
 
   const linesEl = $('#lines');
   const lineOf = (el) => o.lines.find((l) => l.key === el.closest('.line').dataset.key);
@@ -326,9 +372,9 @@ function renderOffer() {
 
   $('#saveBtn').onclick = () => saveOffer();
   $('#dupBtn').onclick = () => { offer = { ...structuredClone(o), id: null, no: offerNo(DB.settings.nextNo || 1), date: today(), client: '', phone: '', email: '', site: '' }; saveDraft(); renderOffer(); toast(t('duplicate') + ' ✓'); };
-  $('#newBtn').onclick = (e) => confirmTap(e.currentTarget, t('newConfirm'), () => { offer = newOffer(); saveDraft(); renderOffer(); });
-  $('#pdfBtn').onclick = () => makePdf('download');
-  $('#shareBtn').onclick = () => makePdf('share');
+  $('#newBtn').onclick = () => renderTemplatePicker();
+  $('#pdfBtn').onclick = () => makePdf('download', $('#pdfLang').value);
+  $('#shareBtn').onclick = () => makePdf('share', $('#pdfLang').value);
   updateTotals();
 }
 function rerenderLine(l) {
@@ -400,8 +446,43 @@ function heading(n, txt) {
   return { margin: [0, 14, 0, 6], table: { widths: ['*'], body: [[{ text: [{ text: n + '  ', color: ORANGE }, { text: txt, color: NAVY }], bold: true, fontSize: 12 }]] },
     layout: { hLineWidth: (i) => (i === 1 ? 1.2 : 0), vLineWidth: () => 0, hLineColor: () => ORANGE, paddingLeft: () => 0, paddingBottom: () => 3 } };
 }
-async function buildDoc(o) {
+// PDF wording in Greek and English
+const PDF_T = {
+  el: {
+    title: 'ΟΙΚΟΝΟΜΙΚΗ ΠΡΟΣΦΟΡΑ', no: 'Αρ. προσφοράς', date: 'Ημερομηνία', client: 'Πελάτης', phone: 'Τηλέφωνο', site: 'Τόπος έργου', email: 'Email',
+    pool: 'Η ΠΙΣΙΝΑ ΣΑΣ', shape: 'Σχήμα και διαστάσεις', rect: 'Ορθογωνική', depth: 'Μέσο βάθος', area: 'Επιφάνεια νερού', vol: 'Όγκος νερού', turn: 'Ανακυκλοφορία νερού', hours: 'ώρες', color: 'Χρώμα μεμβράνης',
+    incl: 'ΤΙ ΠΕΡΙΛΑΜΒΑΝΕΙ Η ΠΡΟΣΦΟΡΑ', n: 'Α/Α', desc: 'Περιγραφή', qty: 'Ποσότ.', war: 'Εγγύηση', price: 'Τιμή (€)', included: 'περιλαμβάνεται',
+    groups: GROUP_EL, units: UNIT_EL, discount: 'Έκπτωση', net: 'Καθαρή αξία', vat: 'ΦΠΑ', total: 'ΣΥΝΟΛΟ ΜΕ ΦΠΑ',
+    terms: 'ΟΡΟΙ ΤΗΣ ΠΡΟΣΦΟΡΑΣ', valid: 'Ισχύς προσφοράς', days: 'ημέρες', delivery: 'Χρόνος παράδοσης', place: 'Τόπος παράδοσης', payment: 'Τρόπος πληρωμής', notIncl: 'Δεν περιλαμβάνονται στην τιμή:',
+    accept: 'ΑΠΟΔΟΧΗ ΤΗΣ ΠΡΟΣΦΟΡΑΣ', acceptText: 'Για να έχει η προσφορά ισχύ παραγγελίας, παρακαλούμε να μας επιστραφεί υπογεγραμμένη (με μονογραφή σε κάθε σελίδα). Για οποιαδήποτε πληροφορία είμαστε στη διάθεσή σας.',
+    forCo: 'Για την εταιρεία', forClient: 'Ο πελάτης', sign: 'Υπογραφή: ____________________', name: 'Ονοματεπώνυμο: ______________', dateL: 'Ημερομηνία: ______________',
+    descr: 'ΠΕΡΙΓΡΑΦΗ ΥΛΙΚΩΝ ΚΑΙ ΕΞΟΠΛΙΣΜΟΥ', descrHint: 'Οι αριθμοί αντιστοιχούν στον πίνακα της ενότητας 2.', offerNo: 'Προσφορά αρ.', page: 'Σελίδα', of: 'από', initials: 'Μονογραφή πελάτη: __________', docTitle: 'Οικονομική προσφορά',
+  },
+  en: {
+    title: 'COMMERCIAL OFFER', no: 'Offer no.', date: 'Date', client: 'Client', phone: 'Phone', site: 'Project site', email: 'Email',
+    pool: 'YOUR POOL', shape: 'Shape and size', rect: 'Rectangular', depth: 'Average depth', area: 'Water surface', vol: 'Water volume', turn: 'Water turnover', hours: 'hours', color: 'Liner colour',
+    incl: 'WHAT THE OFFER INCLUDES', n: 'No.', desc: 'Description', qty: 'Qty', war: 'Warranty', price: 'Price (€)', included: 'included',
+    groups: { A: 'A. Pool construction', B: 'B. Pool equipment', C: 'C. Extra equipment' }, units: { pcs: 'pcs', set: 'set', m: 'm', m2: 'm²', perim: 'm', area: 'm²' },
+    discount: 'Discount', net: 'Net amount', vat: 'VAT', total: 'TOTAL INCL. VAT',
+    terms: 'TERMS OF THE OFFER', valid: 'Offer valid for', days: 'days', delivery: 'Delivery time', place: 'Place of delivery', payment: 'Payment', notIncl: 'Not included in the price:',
+    accept: 'ACCEPTANCE OF THE OFFER', acceptText: 'To place an order, please return this offer signed (with your initials on every page). We are at your disposal for any further information.',
+    forCo: 'For the company', forClient: 'The client', sign: 'Signature: ____________________', name: 'Full name: ______________', dateL: 'Date: ______________',
+    descr: 'MATERIALS AND EQUIPMENT', descrHint: 'Numbers refer to the table in section 2.', offerNo: 'Offer no.', page: 'Page', of: 'of', initials: 'Client initials: __________', docTitle: 'Commercial offer',
+  },
+};
+const COLOR_EN = { 'μπλε': 'blue', 'μπεζ': 'beige', 'λευκό': 'white', 'γαλάζιο': 'light blue', 'ανοιχτό γκρι': 'light grey', 'σκούρο γκρι': 'dark grey', 'πράσινο': 'green', 'άμμου': 'sand', 'ψηφίδα': 'mosaic' };
+function warEn(w) {
+  const m = String(w || '').match(/^(\d+)\s*(χρόνια|χρόνος|έτη|έτος)/);
+  if (m) return `${m[1]} ${+m[1] === 1 ? 'year' : 'years'}`;
+  return w || '—';
+}
+async function buildDoc(o, L = 'el') {
+  const P = PDF_T[L], EN = L === 'en';
   const s = DB.settings, c = totals(o), pc = c.pc;
+  // a Greek default term prints as its English default; anything typed by hand prints as typed
+  const term = (val, key) => (EN && s[key + '_en'] && String(val).trim() === String(s[key] || '').trim() ? s[key + '_en'] : val);
+  const sx = (key) => (EN && s[key + '_en'] ? s[key + '_en'] : s[key] || '');
+  const color = EN ? (COLOR_EN[o.pool.color] || o.pool.color) : o.pool.color;
   const logo = await dataUrl('/logo.png');
   const items = [];
   ['A', 'B', 'C'].forEach((g) => DB.categories.filter((cat) => cat.group === g).forEach((cat) => o.lines.filter((l) => l.category === cat.id).forEach((l) => items.push({ l, g }))));
@@ -409,71 +490,75 @@ async function buildDoc(o) {
   for (const it of items) {
     const m = matById(it.l.matId) || it.l.snap || {};
     it.m = m; it.img = await dataUrl(m.image);
+    it.name = EN ? (m.en || m.el || '') : (m.el || '');
+    it.paras = ((EN && m.desc_en && m.desc_en.length) ? m.desc_en : (m.desc_el || [])).map((x) => x.replace(/\{color\}/g, color || ''));
   }
   items.forEach((it, i) => { it.n = i + 1; });
+  const subtitle = EN ? (o.subtitle_en || s.subtitle_en || '') : (o.subtitle_el ?? s.subtitle ?? '');
   const content = [];
-  content.push({ text: 'ΟΙΚΟΝΟΜΙΚΗ ΠΡΟΣΦΟΡΑ', fontSize: 20, bold: true, color: NAVY });
-  content.push({ text: s.subtitle || '', color: GREY, fontSize: 11, margin: [0, 0, 0, 10] });
+  content.push({ text: P.title, fontSize: 20, bold: true, color: NAVY });
+  content.push({ text: subtitle, color: GREY, fontSize: 11, margin: [0, 0, 0, 10] });
   content.push({ table: { widths: [70, '*', 65, '*'], body: [
-    [...kv('Αρ. προσφοράς', o.no), ...kv('Ημερομηνία', fmtDate(o.date))],
-    [...kv('Πελάτης', o.client), ...kv('Τηλέφωνο', o.phone)],
-    [...kv('Τόπος έργου', o.site), ...kv('Email', o.email)],
+    [...kv(P.no, o.no), ...kv(P.date, fmtDate(o.date))],
+    [...kv(P.client, o.client), ...kv(P.phone, o.phone)],
+    [...kv(P.site, o.site), ...kv(P.email, o.email)],
   ] }, layout: lay });
-  content.push(heading('1', 'Η ΠΙΣΙΝΑ ΣΑΣ'));
-  const depth = pc.a === pc.b ? `${dec(pc.mean, 2)} m` : `${dec(pc.mean, 2)} m (${dec(pc.a, 2)} – ${dec(pc.b, 2)} m)`;
+  const d = (n, k = 1) => (EN ? n.toLocaleString('en-GB', { minimumFractionDigits: k, maximumFractionDigits: 2 }) : dec(n, k));
+  const mon = (n) => (EN ? (Math.round(n * 100) / 100).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : money(n));
+  content.push(heading('1', P.pool));
+  const depth = pc.a === pc.b ? `${d(pc.mean, 2)} m` : `${d(pc.mean, 2)} m (${d(pc.a, 2)} – ${d(pc.b, 2)} m)`;
   content.push({ table: { widths: [150, '*'], body: [
-    kv('Σχήμα και διαστάσεις', `Ορθογωνική ${dec(pc.L)} × ${dec(pc.W)} m`), kv('Μέσο βάθος', depth),
-    kv('Επιφάνεια νερού', `${dec(pc.area)} m²`), kv('Όγκος νερού', `${dec(pc.vol)} m³`),
-    kv('Ανακυκλοφορία νερού', `${dec(num(o.pool.turn))} ώρες`), kv('Χρώμα μεμβράνης', o.pool.color),
+    kv(P.shape, `${P.rect} ${d(pc.L)} × ${d(pc.W)} m`), kv(P.depth, depth),
+    kv(P.area, `${d(pc.area)} m²`), kv(P.vol, `${d(pc.vol)} m³`),
+    kv(P.turn, `${d(num(o.pool.turn))} ${P.hours}`), kv(P.color, color),
   ] }, layout: lay });
 
-  content.push(heading('2', 'ΤΙ ΠΕΡΙΛΑΜΒΑΝΕΙ Η ΠΡΟΣΦΟΡΑ'));
+  content.push(heading('2', P.incl));
   const H = (x, al) => ({ text: x, bold: true, color: '#ffffff', fillColor: NAVY, fontSize: 8, alignment: al });
-  const body = [[H('Α/Α', 'center'), H('Περιγραφή'), H('Ποσότ.', 'center'), H('Εγγύηση', 'center'), H('Τιμή (€)', 'right')]];
+  const body = [[H(P.n, 'center'), H(P.desc), H(P.qty, 'center'), H(P.war, 'center'), H(P.price, 'right')]];
   let lastG = null;
   items.forEach((it) => {
-    if (it.g !== lastG) { body.push([{ text: GROUP_EL[it.g], colSpan: 5, bold: true, color: NAVY, fillColor: LIGHT }, {}, {}, {}, {}]); lastG = it.g; }
+    if (it.g !== lastG) { body.push([{ text: P.groups[it.g], colSpan: 5, bold: true, color: NAVY, fillColor: LIGHT }, {}, {}, {}, {}]); lastG = it.g; }
     const sum = num(it.l.price) * num(it.l.qty);
-    const q = `${dec(num(it.l.qty), 0)} ${UNIT_EL[it.m.unit] || ''}`.trim();
-    body.push([{ text: String(it.n), alignment: 'center' }, it.m.el || '', { text: q, alignment: 'center' }, { text: it.m.warranty || '—', alignment: 'center' },
-      sum === 0 ? { text: 'περιλαμβάνεται', italics: true, color: GREY, alignment: 'right' } : { text: money(sum), alignment: 'right' }]);
+    const q = `${d(num(it.l.qty), 0)} ${P.units[it.m.unit] || ''}`.trim();
+    body.push([{ text: String(it.n), alignment: 'center' }, it.name, { text: q, alignment: 'center' }, { text: EN ? warEn(it.m.warranty) : (it.m.warranty || '—'), alignment: 'center' },
+      sum === 0 ? { text: P.included, italics: true, color: GREY, alignment: 'right' } : { text: mon(sum), alignment: 'right' }]);
   });
   const tot = (l, v, big) => body.push([{ text: l, colSpan: 4, bold: true, alignment: 'right', fontSize: big ? 11 : 9, color: big ? '#ffffff' : undefined, fillColor: big ? NAVY : undefined }, {}, {}, {},
     { text: v, bold: true, alignment: 'right', fontSize: big ? 11 : 9, color: big ? '#ffffff' : undefined, fillColor: big ? NAVY : undefined }]);
-  if (num(o.discount)) tot('Έκπτωση', '−' + money(num(o.discount)));
-  tot('Καθαρή αξία', money(c.net));
-  tot(`ΦΠΑ ${dec(c.rate, 0)}%`, money(c.vat));
-  tot('ΣΥΝΟΛΟ ΜΕ ΦΠΑ', money(c.total) + ' €', true);
+  if (num(o.discount)) tot(P.discount, '−' + mon(num(o.discount)));
+  tot(P.net, mon(c.net));
+  tot(`${P.vat} ${d(c.rate, 0)}%`, mon(c.vat));
+  tot(P.total, mon(c.total) + ' €', true);
   content.push({ table: { headerRows: 1, dontBreakRows: true, widths: [24, '*', 52, 62, 78], body }, layout: lay, fontSize: 8.5 });
 
-  content.push(heading('3', 'ΟΡΟΙ ΤΗΣ ΠΡΟΣΦΟΡΑΣ'));
+  content.push(heading('3', P.terms));
   content.push({ table: { widths: [150, '*'], body: [
-    kv('Ισχύς προσφοράς', `${o.terms.validDays} ημέρες`), kv('Χρόνος παράδοσης', o.terms.delivery),
-    kv('Τόπος παράδοσης', o.terms.place), kv('Τρόπος πληρωμής', o.terms.payment),
+    kv(P.valid, `${o.terms.validDays} ${P.days}`), kv(P.delivery, term(o.terms.delivery, 'delivery')),
+    kv(P.place, term(o.terms.place, 'place')), kv(P.payment, term(o.terms.payment, 'payment')),
   ] }, layout: lay });
   if (o.terms.notIncluded) {
-    content.push({ text: 'Δεν περιλαμβάνονται στην τιμή:', bold: true, margin: [0, 8, 0, 2] });
-    content.push({ text: o.terms.notIncluded, fontSize: 8.5 });
+    content.push({ text: P.notIncl, bold: true, margin: [0, 8, 0, 2] });
+    content.push({ text: term(o.terms.notIncluded, 'notIncluded'), fontSize: 8.5 });
   }
   content.push({ stack: [
-    heading('4', 'ΑΠΟΔΟΧΗ ΤΗΣ ΠΡΟΣΦΟΡΑΣ'),
-    { text: 'Για να έχει η προσφορά ισχύ παραγγελίας, παρακαλούμε να μας επιστραφεί υπογεγραμμένη (με μονογραφή σε κάθε σελίδα). Για οποιαδήποτε πληροφορία είμαστε στη διάθεσή σας.', fontSize: 8.5, margin: [0, 0, 0, 8] },
+    heading('4', P.accept),
+    { text: P.acceptText, fontSize: 8.5, margin: [0, 0, 0, 8] },
     { table: { widths: ['*', '*'], body: [[
-      { stack: [{ text: 'Για την εταιρεία', bold: true, color: NAVY, margin: [0, 0, 0, 8] }, { text: s.signatory || '', margin: [0, 0, 0, 14] }, 'Υπογραφή: ____________________'], margin: [2, 4, 2, 6] },
-      { stack: [{ text: 'Ο πελάτης', bold: true, color: NAVY, margin: [0, 0, 0, 8] }, { text: 'Ονοματεπώνυμο: ______________', margin: [0, 0, 0, 10] }, { text: 'Ημερομηνία: ______________', margin: [0, 0, 0, 10] }, 'Υπογραφή: ____________________'], margin: [2, 4, 2, 6] },
+      { stack: [{ text: P.forCo, bold: true, color: NAVY, margin: [0, 0, 0, 8] }, { text: sx('signatory'), margin: [0, 0, 0, 14] }, P.sign], margin: [2, 4, 2, 6] },
+      { stack: [{ text: P.forClient, bold: true, color: NAVY, margin: [0, 0, 0, 8] }, { text: P.name, margin: [0, 0, 0, 10] }, { text: P.dateL, margin: [0, 0, 0, 10] }, P.sign], margin: [2, 4, 2, 6] },
     ]] }, layout: lay },
   ], unbreakable: true });
 
-  const described = items.filter((it) => (it.m.desc_el || []).length || it.img);
+  const described = items.filter((it) => it.paras.length || it.img);
   if (described.length) {
     content.push({ text: '', pageBreak: 'after' });
-    content.push(heading('5', 'ΠΕΡΙΓΡΑΦΗ ΥΛΙΚΩΝ ΚΑΙ ΕΞΟΠΛΙΣΜΟΥ'));
-    content.push({ text: 'Οι αριθμοί αντιστοιχούν στον πίνακα της ενότητας 2.', fontSize: 8, color: GREY, margin: [0, 0, 0, 8] });
+    content.push(heading('5', P.descr));
+    content.push({ text: P.descrHint, fontSize: 8, color: GREY, margin: [0, 0, 0, 8] });
     described.forEach((it) => {
-      const paras = (it.m.desc_el || []).map((p) => p.replace(/\{color\}/g, o.pool.color || ''));
       const left = { stack: [
-        { text: [{ text: it.n + '.  ', color: ORANGE }, { text: greekCaps(it.m.el || ''), color: NAVY }], bold: true, fontSize: 9.5, margin: [0, 0, 0, 5] },
-        ...paras.map((p) => ({ text: p, fontSize: 8.5, margin: [0, 0, 0, 3] })),
+        { text: [{ text: it.n + '.  ', color: ORANGE }, { text: EN ? it.name.toUpperCase() : greekCaps(it.name), color: NAVY }], bold: true, fontSize: 9.5, margin: [0, 0, 0, 5] },
+        ...it.paras.map((x) => ({ text: x, fontSize: 8.5, margin: [0, 0, 0, 3] })),
       ] };
       const row = it.img ? [left, { image: it.img, fit: [140, 85], alignment: 'center' }] : [{ ...left, colSpan: 2 }, {}];
       content.push({ table: { widths: ['*', 150], body: [row] }, layout: lay, unbreakable: true, margin: [0, 0, 0, 7] });
@@ -481,14 +566,14 @@ async function buildDoc(o) {
   }
   return {
     pageSize: 'A4', pageMargins: [40, 82, 40, 50],
-    info: { title: `Οικονομική προσφορά ${o.no}`, author: s.company || '' },
+    info: { title: `${P.docTitle} ${o.no}`, author: sx('company') },
     defaultStyle: { font: 'Roboto', fontSize: 9, lineHeight: 1.15 },
     header: () => ({ margin: [40, 22, 40, 0], stack: [
       { columns: [
         logo ? { image: logo, width: 36, height: 36 } : { text: '', width: 36 },
-        { stack: [{ text: s.company || '', bold: true, fontSize: 15, color: NAVY }, { text: s.tagline || '', fontSize: 8.5, color: GREY }], margin: [8, 3, 0, 0], width: '*' },
+        { stack: [{ text: sx('company'), bold: true, fontSize: 15, color: NAVY }, { text: sx('tagline'), fontSize: 8.5, color: GREY }], margin: [8, 3, 0, 0], width: '*' },
         { stack: [
-          { text: s.address || '', fontSize: 7.5, color: GREY }, { text: s.phones || '', fontSize: 7.5, bold: true, color: NAVY },
+          { text: sx('address'), fontSize: 7.5, color: GREY }, { text: s.phones || '', fontSize: 7.5, bold: true, color: NAVY },
           { text: s.email || '', fontSize: 7.5, color: GREY }, { text: s.sites || '', fontSize: 7.5, color: NAVY },
         ], alignment: 'right', width: 'auto' },
       ] },
@@ -497,27 +582,27 @@ async function buildDoc(o) {
     footer: (cur, total) => ({ margin: [40, 14, 40, 0], stack: [
       { canvas: [{ type: 'line', x1: 0, y1: 0, x2: 515, y2: 0, lineWidth: 0.5, lineColor: LINE }] },
       { columns: [
-        { text: `Προσφορά αρ. ${o.no} · Σελίδα ${cur} από ${total}`, fontSize: 7.5, color: GREY },
-        { text: 'Μονογραφή πελάτη: __________', fontSize: 7.5, color: GREY, alignment: 'right' },
+        { text: `${P.offerNo} ${o.no} · ${P.page} ${cur} ${P.of} ${total}`, fontSize: 7.5, color: GREY },
+        { text: P.initials, fontSize: 7.5, color: GREY, alignment: 'right' },
       ], margin: [0, 4, 0, 0] },
     ] }),
     content,
   };
 }
-function pdfName(o) {
-  const who = (o.client || 'pelatis').trim().replace(/[\\/:*?"<>|]+/g, '').replace(/\s+/g, '_');
-  return `Prosfora_${String(o.no || '').replace(/\//g, '-')}_${who}.pdf`;
+function pdfName(o, L) {
+  const who = (o.client || (L === 'en' ? 'client' : 'pelatis')).trim().replace(/[\\/:*?"<>|]+/g, '').replace(/\s+/g, '_');
+  return `${L === 'en' ? 'Offer' : 'Prosfora'}_${String(o.no || '').replace(/\//g, '-')}_${who}.pdf`;
 }
-async function makePdf(mode) {
+async function makePdf(mode, L = 'el') {
   if (!window.pdfMake) return toast(t('pdfLoading'), true);
   const c = totals(offer);
   if (c.missing.length) return toast(t('pdfMissing') + c.missing.join(', '), true);
   const btn = $(mode === 'share' ? '#shareBtn' : '#pdfBtn'); btn.disabled = true;
   try {
     await saveOffer(true);
-    const doc = await buildDoc(offer);
+    const doc = await buildDoc(offer, L);
     const blob = await new Promise((res) => pdfMake.createPdf(doc).getBlob(res));
-    const name = pdfName(offer);
+    const name = pdfName(offer, L);
     if (mode === 'share') {
       try { await navigator.share({ files: [new File([blob], name, { type: 'application/pdf' })], title: name }); } catch (e) { if (e.name !== 'AbortError') toast(String(e.message || e), true); }
     } else {
@@ -560,11 +645,13 @@ function renderMaterialEdit(m) {
     <label class="f full">${esc(t('category'))}<select id="e_cat">${DB.categories.map((c) => `<option value="${esc(c.id)}" ${c.id === m.category ? 'selected' : ''}>${esc(catName(c))}</option>`).join('')}</select></label>
     <label class="f full">${esc(t('nameEl'))}<input id="e_el" value="${esc(m.el)}"></label>
     <label class="f full">${esc(t('nameRu'))}<input id="e_ru" value="${esc(m.ru || '')}"></label>
+    <label class="f full">${esc(t('nameEn'))}<input id="e_en" value="${esc(m.en || '')}"></label>
     <label class="f full">${esc(t('price'))}<input id="e_price" class="num" inputmode="decimal" value="${hasNum(m.price) ? esc(money(num(m.price))) : ''}" placeholder="—"></label>
     <label class="f">${esc(t('unit'))}<select id="e_unit">${Object.keys(units).map((u) => `<option value="${u}" ${u === m.unit ? 'selected' : ''}>${esc(units[u])}</option>`).join('')}</select></label>
     <label class="f">${esc(t('defQty'))}<input id="e_qty" class="num" inputmode="decimal" value="${esc(String(m.qty ?? 1).replace('.', ','))}"></label>
     <label class="f full">${esc(t('warranty'))}<input id="e_war" value="${esc(m.warranty || '')}" placeholder="2 χρόνια"></label>
     <label class="f full">${esc(t('desc'))}<textarea id="e_desc" rows="5">${esc((m.desc_el || []).join('\n\n'))}</textarea></label>
+    <label class="f full">${esc(t('descEn'))}<textarea id="e_desc_en" rows="4">${esc((m.desc_en || []).join('\n\n'))}</textarea></label>
     <div class="full"><div class="f" style="font-size:12.5px;color:var(--muted);margin-bottom:6px">${esc(t('photo'))}</div>
       <div class="photo"><img id="e_img" src="${esc(m.image || '')}" alt="" ${m.image ? '' : 'hidden'}>
         <div class="row"><label class="btn small">${esc(t('uploadPhoto'))}<input id="e_file" type="file" accept="image/*" hidden></label>
@@ -591,6 +678,7 @@ function renderMaterialEdit(m) {
       category: $('#e_cat').value, el: $('#e_el').value.trim(), ru: $('#e_ru').value.trim(), unit: $('#e_unit').value,
       qty: num($('#e_qty').value) || 1, price: pv === '' ? null : num(pv), warranty: $('#e_war').value.trim(),
       desc_el: $('#e_desc').value.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean), default: $('#e_def').checked,
+      en: $('#e_en').value.trim(), desc_en: $('#e_desc_en').value.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean),
     });
     if (!m.el) return toast(t('nameEl'), true);
     try {
@@ -659,6 +747,19 @@ function renderSettings() {
   <section class="card"><h2>${esc(t('company'))}</h2><div class="grid">
     ${f('company', t('companyName'))}${f('tagline', t('tagline'))}${f('address', t('address'))}${f('phones', t('phones'))}${f('email', t('email'))}${f('sites', t('sites'))}${f('signatory', t('signatory'))}${f('subtitle', t('subtitle'))}
   </div></section>
+  <section class="card"><h2>${esc(t('english'))}</h2><div class="grid">
+    ${f('company_en', t('companyName'))}${f('tagline_en', t('tagline'))}${f('address_en', t('address'))}${f('signatory_en', t('signatory'))}${f('subtitle_en', t('subtitle'))}
+    ${f('delivery_en', t('delivery'))}${f('place_en', t('place'))}${f('payment_en', t('payment'))}
+    <label class="f full">${esc(t('notIncluded'))}<textarea data-s="notIncluded_en">${esc(s.notIncluded_en || '')}</textarea></label>
+  </div></section>
+  <section class="card"><h2>${esc(t('templates'))}</h2>
+    ${(s.templates || []).map((x, i) => `<div class="grid" style="border-top:1px solid var(--line);padding-top:10px">
+      <label class="f">${esc(t('tplName'))} (рус)<input data-tpl-ru="${i}" value="${esc(x.ru || '')}"></label>
+      <label class="f">${esc(t('tplName'))} (ελ)<input data-tpl-el="${i}" value="${esc(x.el || '')}"></label>
+      <p class="hint full">${x.materials.filter(matById).map((id) => esc(nameOf(matById(id)))).join(' · ')}</p>
+      <div class="row full end"><button class="btn small danger" data-tpl-del="${i}" type="button">${esc(t('tplDelete'))}</button></div></div>`).join('')}
+    <p class="hint">${esc(t('chooseTemplateHint'))} → ${esc(t('saveAsTemplate'))}</p>
+  </section>
   <section class="card"><h2>${esc(t('defaults'))}</h2><div class="grid">
     ${f('validDays', t('validDays'), 'inputmode="numeric"')}${f('vatRate', t('vatRate'), 'inputmode="decimal"')}${f('delivery', t('delivery'))}${f('place', t('place'))}${f('payment', t('payment'))}
     <label class="f full">${esc(t('notIncluded'))}<textarea data-s="notIncluded">${esc(s.notIncluded || '')}</textarea></label>
@@ -674,8 +775,13 @@ function renderSettings() {
     $$('[data-s]').forEach((i) => { ns[i.dataset.s] = i.value; });
     ns.vatRate = num(ns.vatRate); ns.validDays = num(ns.validDays); ns.nextNo = Math.max(1, Math.round(num(ns.nextNo)) || 1);
     ns.colors = $('#s_colors').value.split(',').map((x) => x.trim()).filter(Boolean);
+    ns.templates = (s.templates || []).map((x, i) => ({ ...x, ru: $(`[data-tpl-ru="${i}"]`).value.trim() || x.ru, el: $(`[data-tpl-el="${i}"]`).value.trim() || x.el }));
     try { await api('/settings', { method: 'PUT', body: { settings: ns } }); DB.settings = ns; toast(t('saved')); } catch (e) { toast(t('netErr'), true); }
   };
+  $$('[data-tpl-del]').forEach((b) => b.addEventListener('click', (e) => confirmTap(e.currentTarget, t('delConfirm'), async () => {
+    const ns = { ...DB.settings, templates: (DB.settings.templates || []).filter((x, i) => i !== +b.dataset.tplDel) };
+    try { await api('/settings', { method: 'PUT', body: { settings: ns } }); DB.settings = ns; renderSettings(); } catch (err) { toast(t('netErr'), true); }
+  })));
   $('#pSave').onclick = async () => {
     const a = $('#np1').value.trim(), b = $('#np2').value.trim();
     if (a.length < 4) return toast(t('shortPin'), true);

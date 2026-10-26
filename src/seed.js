@@ -85,7 +85,7 @@ export const SEED_MATERIALS = [
     ['Αυξάνει τη ροή επιστροφής του νερού για μασάζ και χαλάρωση, με ή χωρίς ανάμιξη αέρα.'], false),
 ];
 
-export const SEED_SETTINGS = {
+export const SEED_SETTINGS_BASE = {
   company: 'ΣΠΑΡΤΑΚΟΣ',
   tagline: 'Πισίνες προκάτ',
   address: 'Ξενοφώντος 112, Καλλιθέα',
@@ -103,3 +103,65 @@ export const SEED_SETTINGS = {
   colors: ['μπλε', 'μπεζ', 'λευκό', 'γαλάζιο', 'ανοιχτό γκρι', 'σκούρο γκρι', 'πράσινο', 'άμμου', 'ψηφίδα'],
   nextNo: 1,
 };
+
+// English names and descriptions for the PDF in English (added to existing catalogues by the v2 migration).
+export const SEED_EN = {
+  panels15: ['Support panels with triangular braces, height 1.5 m', ['Supply and installation of panels with triangular braces, 1.5 m high, made of hot-dip galvanised steel.']],
+  panels12: ['Support panels with triangular braces, height 1.2 m', ['Supply and installation of panels with triangular braces, 1.2 m high, made of hot-dip galvanised steel.']],
+  liner15: ['PVC lining membrane 1.5 mm', ['Supply and installation of a special reinforced PVC lining membrane, 1.5 mm thick, ensuring complete watertightness, colour {color}, together with the special fixing profiles. The membrane is anti-fungal, highly durable and easy to clean.']],
+  equip: ['Pool equipment with conventional plant room', ['The equipment is sized according to the «NSPI for swimming pools» standards, which exceed the corresponding Greek standards of health regulation Γ1/443/15.1.73.']],
+  f640: ['Kripsol Artic F640 sand filter, 6.5 m³/h', ['Kripsol Artic F640 sand filter with side multiport valve, made of glass-fibre reinforced polyester resin. Plastic base and polypropylene lid Ø 300 mm.', 'Filtration speed 12 m³/h/m² · filter bed height 0.6 m · max. pressure 1.6 kg/cm² · test pressure 2.5 kg/cm² · max. temperature 50 °C.']],
+  f400: ['Kripsol Artic F400 sand filter, 12 m³/h', ['Kripsol Artic F400 sand filter with side multiport valve, made of glass-fibre reinforced polyester resin. Plastic base and polypropylene lid Ø 300 mm.', 'Filtration speed 12 m³/h/m² · filter bed height 0.6 m · max. pressure 1.6 kg/cm² · test pressure 2.5 kg/cm² · max. temperature 50 °C.']],
+  kse07: ['Kripsol KSE pump 0.7 HP', ['Ultra-quiet self-priming pump, IP55 motor with stainless steel shaft, large pre-filter basket with cam-lock lid, supplied with 2\'\' unions.', 'Power 0.7 HP · ports 2\'\' × 2\'\' · Hmax 18 m · Qmax 12 m³/h · 230 V single-phase.']],
+  kse15: ['Kripsol KSE pump 1.5 HP', ['Ultra-quiet self-priming pump, IP55 motor with stainless steel shaft, large pre-filter basket with cam-lock lid, supplied with 2\'\' unions.', 'Power 1.5 HP · ports 2\'\' × 2\'\' · Hmax 18 m · Qmax 12 m³/h · 230 V single-phase.']],
+  grate: ['Main drain (liner)', ['Round Astral main drain (Spain) made of high-quality ABS Cycolac, resistant to pool chemicals.']],
+  inlets: ['Return inlets (liner)', ['Astral multiflow 2\'\' Φ50 inlets for prefabricated pools. Flow is set during installation (14, 20 and 25 mm openings).']],
+  vacinlet: ['Vacuum point (liner)', ['Astral fitting for connecting the pool vacuum cleaner.']],
+  skimmer: ['Skimmer', ['Astral skimmer in white ABS, with basket, flanges and gaskets for liner pools.']],
+  led: ['Underwater LED light 35 W', ['Astral white LED light 35 W / 12 V, with niche, cable protection spiral and 2.30 m cable.']],
+  elpanel: ['Electrical panel with lighting transformer', ['Protection panel designed specifically for swimming pools, with transformer for the lights.']],
+  vacuum: ['Pool vacuum head', ['Astral (Spain) vacuum head with 8 wheels.']],
+  net: ['Leaf net and brush', ['Procopi surface leaf net and pool cleaning brush.']],
+  pole: ['Telescopic pole', ['Telescopic pole with fitting for the vacuum head, leaf net and brush.']],
+  hose: ['Floating vacuum hose 12 m', ['Light blue polyethylene hose, 12 m, with special cuffs for the vacuum point.']],
+  testkit: ['Water test kit', ['Reagent kit: OTO for free chlorine and Phenol Red for pH.']],
+  muro: ['Muro AISI 316 pool ladder, 3 steps', ['Stainless steel AISI 316 ladder with handrails, 3 steps.']],
+  marble: ['Marble coping', ['Supply and installation of marble coping stones. Marble is one of the best pool materials: durable, timeless and beautiful, linking the pool with the garden.']],
+  salt: ['Kripsol salt chlorinator', ['Salt chlorinator with control unit for filtration and lighting, for residential pools up to 200 m³.', 'IP65 unit with Cl2 production display · output 8 to 50 g/h · salinity 3 to 100 g/l · timer for filtration and lighting · salt level warning · upgradable with pH, Rx, temperature and Wi-Fi with smartphone app.']],
+  phpump: ['Hayward pH dosing pump', ['Peristaltic dosing pump for automatic pH measurement and control. pH range 6.0 – 8.0 · IP56 · 230 V 50-60 Hz · alarm.', 'Includes pH probe, calibration solution and connection kit.']],
+  heatpump: ['Inverter heat pump', ['Warm water at low running cost: the heat pump takes most of its energy from the air, a renewable and environmentally friendly source.']],
+  counter: ['Counter-current swimming system', ['Creates a stream of water and air with adjustable strength, for swimming against the current.']],
+  turbo: ['Turbo jet hydromassage', ['Boosts the return water flow for massage and relaxation, with or without air mixing.']],
+};
+
+// Offer templates: shown when a new offer is started. Lists of material ids.
+const BASE = ['panels15', 'liner15', 'equip', 'f640', 'kse07', 'grate', 'inlets', 'vacinlet', 'skimmer', 'led', 'elpanel', 'vacuum', 'net', 'pole', 'hose', 'testkit', 'muro', 'turbo'];
+export const SEED_TEMPLATES = [
+  { id: 'hydro', ru: 'Бассейн с гидромассажем', el: 'Πισίνα με υδρομασάζ',
+    subtitle_el: 'Κατασκευή προκατασκευασμένης πισίνας με υδρομασάζ', subtitle_en: 'Construction of a prefabricated pool with hydromassage',
+    materials: BASE },
+  { id: 'hydro_salt', ru: 'С гидромассажем и электролизом соли', el: 'Πισίνα με υδρομασάζ και ηλεκτρόλυση',
+    subtitle_el: 'Κατασκευή προκατασκευασμένης πισίνας με υδρομασάζ και ηλεκτρόλυση άλατος', subtitle_en: 'Construction of a prefabricated pool with hydromassage and salt electrolysis',
+    materials: [...BASE, 'salt', 'phpump'] },
+  { id: 'hydro_heat', ru: 'С гидромассажем, тепловым насосом и противотоком', el: 'Πισίνα με υδρομασάζ, αντλία θερμότητας και αντίθετη κολύμβηση',
+    subtitle_el: 'Κατασκευή προκατασκευασμένης πισίνας με υδρομασάζ, αντλία θερμότητας Inverter και σύστημα αντίθετης κολύμβησης', subtitle_en: 'Construction of a prefabricated pool with hydromassage, Inverter heat pump and counter-current system',
+    materials: [...BASE, 'heatpump', 'counter'] },
+  { id: 'relining', ru: 'Замена облицовки (мембрана liner)', el: 'Επένδυση πισίνας liner',
+    subtitle_el: 'Επένδυση πισίνας με μεμβράνη liner', subtitle_en: 'Pool relining with PVC liner membrane',
+    materials: ['liner15', 'grate', 'inlets', 'vacinlet', 'skimmer'] },
+];
+
+export const SEED_SETTINGS_EN = {
+  company_en: 'SPARTAKOS',
+  signatory_en: 'Spartakos Karipidis',
+  tagline_en: 'Prefabricated pools',
+  address_en: '112 Xenofontos St, Kallithea, Athens',
+  subtitle_en: 'Construction of a prefabricated liner pool',
+  delivery_en: 'Immediate',
+  place_en: 'Our warehouse',
+  payment_en: 'By agreement',
+  notIncluded_en: 'Extra cement and sand for the screed and gross concrete, as well as additional excavation, backfilling, concreting and screeding.',
+};
+
+SEED_MATERIALS.forEach((x) => { const e = SEED_EN[x.id]; if (e) { x.en = e[0]; x.desc_en = e[1]; } });
+export const SEED_SETTINGS = { ...SEED_SETTINGS_BASE, ...SEED_SETTINGS_EN, templates: SEED_TEMPLATES };

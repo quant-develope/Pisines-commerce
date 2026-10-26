@@ -2,7 +2,9 @@
 // All data (PIN, catalogue, settings, saved offers, uploaded photos) lives in one
 // SQLite-backed Durable Object, so nothing private is ever committed to the repo.
 import { DurableObject } from 'cloudflare:workers';
-import { SEED_CATEGORIES, SEED_MATERIALS, SEED_SETTINGS } from './seed.js';
+import { SEED_CATEGORIES, SEED_MATERIALS, SEED_SETTINGS, SEED_EN, SEED_TEMPLATES, SEED_SETTINGS_EN } from './seed.js';
+
+const SEED_VERSION = 2;
 
 const json = (data, status = 200) => new Response(JSON.stringify(data), {
   status, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' },
@@ -56,6 +58,28 @@ export class Store extends DurableObject {
     const batch = {};
     SEED_MATERIALS.forEach((m, i) => { batch['mat:' + m.id] = { ...m, order: i }; });
     await this.ctx.storage.put(batch);
+    await this.ctx.storage.put('seedVersion', SEED_VERSION);
+  }
+
+  // Brings a catalogue created by an older version up to date without touching the owner's edits.
+  async migrate() {
+    const S = this.ctx.storage;
+    const v = (await S.get('seedVersion')) || 1;
+    if (v >= SEED_VERSION || !(await S.get('categories'))) return;
+    if (v < 2) {
+      const settings = (await S.get('settings')) || {};
+      for (const [k, val] of Object.entries(SEED_SETTINGS_EN)) if (settings[k] == null) settings[k] = val;
+      if (!settings.templates) settings.templates = SEED_TEMPLATES;
+      await S.put('settings', settings);
+      const mats = await S.list({ prefix: 'mat:' });
+      const batch = {};
+      for (const [key, m] of mats) {
+        const e = SEED_EN[m.id];
+        if (e && !m.en) batch[key] = { ...m, en: e[0], desc_en: e[1] };
+      }
+      if (Object.keys(batch).length) await S.put(batch);
+    }
+    await S.put('seedVersion', SEED_VERSION);
   }
 
   async listPrefix(prefix) {
@@ -108,6 +132,7 @@ export class Store extends DurableObject {
     if (!(await this.authed(request))) return json({ error: 'auth' }, 401);
 
     if (path === '/data' && method === 'GET') {
+      await this.migrate();
       const offers = (await this.listPrefix('offer:')).map((o) => ({
         id: o.id, no: o.no, date: o.date, client: o.client, total: o.total, updated: o.updated,
       })).sort((a, b) => (b.updated || 0) - (a.updated || 0));
