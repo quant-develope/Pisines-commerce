@@ -21,7 +21,7 @@ const T = {
     newConfirm: 'Нажмите ещё раз: начнётся новое предложение.', pdfMissing: 'Нет цены у позиций: ', pdfReady: 'PDF готов', pdfLoading: 'Генератор PDF ещё загружается, подождите пару секунд',
     share: 'Отправить',
     materials: 'Справочник материалов', matHint: 'Здесь хранятся материалы и их цены. В предложении цена подставится сама.', search: 'Поиск', newMaterial: '+ Новый материал', editCategories: 'Категории',
-    matEdit: 'Материал', category: 'Категория', nameEl: 'Название (греч.) — идёт в PDF', nameRu: 'Название (рус.)', unit: 'Единица', defQty: 'Кол-во по умолч.', price: 'Цена за ед. без НДС, €', warranty: 'Гарантия (греч.)', desc: 'Описание для PDF (греч.). Пустая строка = новый абзац. {color} = цвет мембраны', photo: 'Фото', uploadPhoto: 'Загрузить фото', removePhoto: 'Убрать фото', isDefault: 'Добавлять в новое предложение автоматически', del: 'Удалить', delConfirm: 'Нажмите ещё раз для удаления', back: '← Назад',
+    matEdit: 'Материал', category: 'Категория', nameEl: 'Название (греч.) — идёт в PDF', nameRu: 'Название (рус.)', unit: 'Единица', defQty: 'Кол-во по умолч.', price: 'Цена за ед. без НДС, €', warranty: 'Гарантия (греч.)', desc: 'Описание для PDF (греч.). Пустая строка = новый абзац. {color} = цвет мембраны', photo: 'Фото', uploadPhoto: 'Загрузить фото', dropPhoto: 'или перетащите файл с фото сюда', dropBad: 'Это не картинка', removePhoto: 'Убрать фото', isDefault: 'Добавлять в новое предложение автоматически', del: 'Удалить', delConfirm: 'Нажмите ещё раз для удаления', back: '← Назад',
     units: { pcs: 'шт.', set: 'компл.', m: 'м', m2: 'м²', perim: 'м (периметр, считается сам)', area: 'м² (площадь воды, считается сам)' },
     catName: 'Название', catGroup: 'Раздел', groups: { A: 'А. Конструкция', B: 'Б. Оборудование', C: 'В. Опции' }, newCategory: '+ Категория', saveCategories: 'Сохранить категории', up: '↑', down: '↓',
     archive: 'Сохранённые предложения', archiveEmpty: 'Пока пусто. Нажмите «Сохранить» на экране предложения.', open: 'Открыть',
@@ -50,7 +50,7 @@ const T = {
     newConfirm: 'Πατήστε ξανά για νέα προσφορά.', pdfMissing: 'Χωρίς τιμή: ', pdfReady: 'Το PDF είναι έτοιμο', pdfLoading: 'Η δημιουργία PDF φορτώνει, περιμένετε λίγο',
     share: 'Αποστολή',
     materials: 'Κατάλογος υλικών', matHint: 'Εδώ φυλάσσονται τα υλικά και οι τιμές τους. Στην προσφορά η τιμή μπαίνει αυτόματα.', search: 'Αναζήτηση', newMaterial: '+ Νέο υλικό', editCategories: 'Κατηγορίες',
-    matEdit: 'Υλικό', category: 'Κατηγορία', nameEl: 'Όνομα (ελληνικά) — στο PDF', nameRu: 'Όνομα (ρωσικά)', unit: 'Μονάδα', defQty: 'Προεπιλ. ποσότητα', price: 'Τιμή μονάδας χωρίς ΦΠΑ, €', warranty: 'Εγγύηση', desc: 'Περιγραφή για το PDF. Κενή γραμμή = νέα παράγραφος. {color} = χρώμα μεμβράνης', photo: 'Φωτογραφία', uploadPhoto: 'Ανέβασμα φωτογραφίας', removePhoto: 'Αφαίρεση φωτογραφίας', isDefault: 'Μπαίνει αυτόματα σε νέα προσφορά', del: 'Διαγραφή', delConfirm: 'Πατήστε ξανά για διαγραφή', back: '← Πίσω',
+    matEdit: 'Υλικό', category: 'Κατηγορία', nameEl: 'Όνομα (ελληνικά) — στο PDF', nameRu: 'Όνομα (ρωσικά)', unit: 'Μονάδα', defQty: 'Προεπιλ. ποσότητα', price: 'Τιμή μονάδας χωρίς ΦΠΑ, €', warranty: 'Εγγύηση', desc: 'Περιγραφή για το PDF. Κενή γραμμή = νέα παράγραφος. {color} = χρώμα μεμβράνης', photo: 'Φωτογραφία', uploadPhoto: 'Ανέβασμα φωτογραφίας', dropPhoto: 'ή σύρετε εδώ το αρχείο της φωτογραφίας', dropBad: 'Δεν είναι εικόνα', removePhoto: 'Αφαίρεση φωτογραφίας', isDefault: 'Μπαίνει αυτόματα σε νέα προσφορά', del: 'Διαγραφή', delConfirm: 'Πατήστε ξανά για διαγραφή', back: '← Πίσω',
     units: { pcs: 'τεμ.', set: 'σετ', m: 'm', m2: 'm²', perim: 'm (περίμετρος, αυτόματα)', area: 'm² (επιφάνεια νερού, αυτόματα)' },
     catName: 'Όνομα', catGroup: 'Ενότητα', groups: { A: 'Α. Κατασκευή', B: 'Β. Εξοπλισμός', C: 'Γ. Επιπλέον' }, newCategory: '+ Κατηγορία', saveCategories: 'Αποθήκευση κατηγοριών', up: '↑', down: '↓',
     archive: 'Αποθηκευμένες προσφορές', archiveEmpty: 'Κενό. Πατήστε «Αποθήκευση» στην προσφορά.', open: 'Άνοιγμα',
@@ -670,15 +670,17 @@ function renderMaterialEdit(m) {
     <label class="f full">${esc(t('desc'))}<textarea id="e_desc" rows="5">${esc((m.desc_el || []).join('\n\n'))}</textarea></label>
     <label class="f full">${esc(t('descEn'))}<textarea id="e_desc_en" rows="4">${esc((m.desc_en || []).join('\n\n'))}</textarea></label>
     <div class="full"><div class="f" style="font-size:12.5px;color:var(--muted);margin-bottom:6px">${esc(t('photo'))}</div>
-      <div class="photo"><img id="e_img" src="${esc(m.image || '')}" alt="" ${m.image ? '' : 'hidden'}>
+      <div class="photo drop" id="e_drop"><img id="e_img" src="${esc(m.image || '')}" alt="" ${m.image ? '' : 'hidden'}>
         <div class="row"><label class="btn small">${esc(t('uploadPhoto'))}<input id="e_file" type="file" accept="image/*" hidden></label>
-        <button class="btn small" id="e_noimg" type="button" ${m.image ? '' : 'hidden'}>${esc(t('removePhoto'))}</button></div></div></div>
+        <button class="btn small" id="e_noimg" type="button" ${m.image ? '' : 'hidden'}>${esc(t('removePhoto'))}</button>
+        <span class="hint">${esc(t('dropPhoto'))}</span></div></div></div>
     <label class="check full"><input type="checkbox" id="e_def" ${m.default ? 'checked' : ''}>${esc(t('isDefault'))}</label>
   </div>
   <div class="row"><button class="btn main" id="e_save" type="button">${esc(t('save'))}</button>${m.id ? `<button class="btn danger" id="e_del" type="button">${esc(t('del'))}</button>` : ''}</div></section>`;
   $('#back').onclick = renderMaterials;
-  $('#e_file').onchange = async (e) => {
-    const f = e.target.files[0]; if (!f) return;
+  const setPhoto = async (f) => {
+    if (!f) return;
+    if (!/^image\//.test(f.type)) return toast(t('dropBad'), true);
     try {
       const bmp = await createImageBitmap(f);
       const k = Math.min(1, 640 / bmp.width, 480 / bmp.height);
@@ -688,6 +690,14 @@ function renderMaterialEdit(m) {
       m.image = r.url; $('#e_img').src = r.url; $('#e_img').hidden = false; $('#e_noimg').hidden = false;
     } catch (err) { toast(t('netErr'), true); }
   };
+  $('#e_file').onchange = (e) => setPhoto(e.target.files[0]);
+  // desktop: drop an image file anywhere on the edit card; the photo box lights up
+  const card = $('#e_drop').closest('section'), box = $('#e_drop');
+  let depth = 0;
+  card.ondragenter = (e) => { if (e.dataTransfer.types.includes('Files')) { e.preventDefault(); depth++; box.classList.add('over'); } };
+  card.ondragover = (e) => { if (e.dataTransfer.types.includes('Files')) e.preventDefault(); };
+  card.ondragleave = () => { if (--depth <= 0) { depth = 0; box.classList.remove('over'); } };
+  card.ondrop = (e) => { e.preventDefault(); depth = 0; box.classList.remove('over'); setPhoto(e.dataTransfer.files[0]); };
   $('#e_noimg').onclick = () => { m.image = ''; $('#e_img').hidden = true; $('#e_noimg').hidden = true; };
   $('#e_save').onclick = async () => {
     const pv = $('#e_price').value.trim();
@@ -809,3 +819,6 @@ function renderSettings() {
 }
 
 boot();
+
+// a file dropped outside the photo box must not make the browser leave the app
+['dragover', 'drop'].forEach((ev) => window.addEventListener(ev, (e) => { if (e.dataTransfer && e.dataTransfer.types.includes('Files')) e.preventDefault(); }));

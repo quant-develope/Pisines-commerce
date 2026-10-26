@@ -89,6 +89,9 @@ input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-
 .mat .p { font-variant-numeric: tabular-nums; font-weight: 600; font-size: 14px; white-space: nowrap }
 .photo { display: flex; gap: 12px; align-items: center }
 .photo img { width: 120px; height: 90px; object-fit: contain; background: var(--field); border-radius: 8px; border: 1px solid var(--line) }
+.photo.drop { border: 2px dashed var(--line); border-radius: 10px; padding: 10px; flex-wrap: wrap }
+.photo.drop.over { border-color: var(--navy); background: var(--navy-soft) }
+@media (hover: none) { .photo.drop { border: 0; padding: 0 } .photo.drop .hint { display: none } }
 .check { display: flex; gap: 8px; align-items: center; font-size: 14px }
 .check input { width: 20px; height: 20px; accent-color: var(--navy) }
 
