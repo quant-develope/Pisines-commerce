@@ -5,7 +5,7 @@ import { DurableObject } from 'cloudflare:workers';
 import { SEED_CATEGORIES, SEED_MATERIALS, SEED_SETTINGS, SEED_EN, SEED_TEMPLATES, SEED_SETTINGS_EN } from './seed.js';
 import { PREV_DESC } from './seed_prev.js';
 
-const SEED_VERSION = 4;
+const SEED_VERSION = 5;
 
 const json = (data, status = 200) => new Response(JSON.stringify(data), {
   status, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' },
@@ -104,6 +104,13 @@ export class Store extends DurableObject {
         if (upd.desc_el !== m.desc_el || upd.desc_en !== m.desc_en) batch[key] = upd;
       }
       if (Object.keys(batch).length) await S.put(batch);
+    }
+    if (v < 5) {
+      // owner: the Hayward pH pump is replaced by the Mr. Pure (Aquark) chlorinator in every template
+      if (!(await S.get('mat:aquark'))) await S.put('mat:aquark', { ...SEED_MATERIALS.find((x) => x.id === 'aquark'), order: SEED_MATERIALS.length + 1 });
+      const settings = (await S.get('settings')) || {};
+      (settings.templates || []).forEach((t) => { t.materials = t.materials.map((x) => (x === 'phpump' ? 'aquark' : x && x.id === 'phpump' ? { ...x, id: 'aquark' } : x)); });
+      await S.put('settings', settings);
     }
     await S.put('seedVersion', SEED_VERSION);
   }
