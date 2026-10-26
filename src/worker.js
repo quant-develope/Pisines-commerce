@@ -5,7 +5,7 @@ import { DurableObject } from 'cloudflare:workers';
 import { SEED_CATEGORIES, SEED_MATERIALS, SEED_SETTINGS, SEED_EN, SEED_TEMPLATES, SEED_SETTINGS_EN } from './seed.js';
 import { PREV_DESC } from './seed_prev.js';
 
-const SEED_VERSION = 7;
+const SEED_VERSION = 8;
 
 const json = (data, status = 200) => new Response(JSON.stringify(data), {
   status, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' },
@@ -118,10 +118,10 @@ export class Store extends DurableObject {
       (settings.templates || []).forEach((t) => { t.materials = t.materials.map((x) => (x === 'aquark' ? 'phpump' : x && x.id === 'aquark' ? { ...x, id: 'phpump' } : x)); });
       await S.put('settings', settings);
     }
-    if (v < 7) {
+    if (v < 8) {
       // newer Hayward photo from the owner (new file name so browsers don't show the cached old one)
       const m = await S.get('mat:phpump');
-      if (m && m.image === '/img/ph.jpg') await S.put('mat:phpump', { ...m, image: '/img/ph2.jpg' });
+      if (m && ['/img/ph.jpg', '/img/ph2.jpg'].includes(m.image)) await S.put('mat:phpump', { ...m, image: '/img/ph3.jpg' });
     }
     await S.put('seedVersion', SEED_VERSION);
   }
