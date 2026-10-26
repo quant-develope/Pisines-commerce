@@ -451,7 +451,7 @@ const PDF_T = {
     terms: 'ΟΡΟΙ ΤΗΣ ΠΡΟΣΦΟΡΑΣ', valid: 'Ισχύς προσφοράς', days: 'ημέρες', delivery: 'Χρόνος παράδοσης', place: 'Τόπος παράδοσης', payment: 'Τρόπος πληρωμής', notIncl: 'Δεν περιλαμβάνονται στην τιμή:',
     accept: 'ΑΠΟΔΟΧΗ ΤΗΣ ΠΡΟΣΦΟΡΑΣ', acceptText: 'Για να έχει η προσφορά ισχύ παραγγελίας, παρακαλούμε να μας επιστραφεί υπογεγραμμένη (με μονογραφή σε κάθε σελίδα). Για οποιαδήποτε πληροφορία είμαστε στη διάθεσή σας.',
     forCo: 'Για την εταιρεία', forClient: 'Ο πελάτης', sign: 'Υπογραφή: ____________________', name: 'Ονοματεπώνυμο: ______________', dateL: 'Ημερομηνία: ______________',
-    descr: 'ΠΕΡΙΓΡΑΦΗ ΥΛΙΚΩΝ ΚΑΙ ΕΞΟΠΛΙΣΜΟΥ', descrHint: 'Οι αριθμοί αντιστοιχούν στον πίνακα της ενότητας 2.', offerNo: 'Προσφορά αρ.', page: 'Σελίδα', of: 'από', initials: 'Μονογραφή πελάτη: __________', docTitle: 'Οικονομική προσφορά',
+    descr: 'ΠΕΡΙΓΡΑΦΗ ΥΛΙΚΩΝ ΚΑΙ ΕΞΟΠΛΙΣΜΟΥ', descrHint: 'Οι αριθμοί αντιστοιχούν στον πίνακα της ενότητας {n}.', offerNo: 'Προσφορά αρ.', page: 'Σελίδα', of: 'από', initials: 'Μονογραφή πελάτη: __________', docTitle: 'Οικονομική προσφορά',
   },
   en: {
     title: 'COMMERCIAL OFFER', no: 'Offer no.', date: 'Date', client: 'Client', phone: 'Phone', site: 'Project site', email: 'Email',
@@ -462,7 +462,7 @@ const PDF_T = {
     terms: 'TERMS OF THE OFFER', valid: 'Offer valid for', days: 'days', delivery: 'Delivery time', place: 'Place of delivery', payment: 'Payment', notIncl: 'Not included in the price:',
     accept: 'ACCEPTANCE OF THE OFFER', acceptText: 'To place an order, please return this offer signed (with your initials on every page). We are at your disposal for any further information.',
     forCo: 'For the company', forClient: 'The client', sign: 'Signature: ____________________', name: 'Full name: ______________', dateL: 'Date: ______________',
-    descr: 'MATERIALS AND EQUIPMENT', descrHint: 'Numbers refer to the table in section 2.', offerNo: 'Offer no.', page: 'Page', of: 'of', initials: 'Client initials: __________', docTitle: 'Commercial offer',
+    descr: 'MATERIALS AND EQUIPMENT', descrHint: 'Numbers refer to the table in section {n}.', offerNo: 'Offer no.', page: 'Page', of: 'of', initials: 'Client initials: __________', docTitle: 'Commercial offer',
   },
 };
 const COLOR_EN = { 'μπλε': 'blue', 'μπεζ': 'beige', 'λευκό': 'white', 'γαλάζιο': 'light blue', 'ανοιχτό γκρι': 'light grey', 'σκούρο γκρι': 'dark grey', 'πράσινο': 'green', 'άμμου': 'sand', 'ψηφίδα': 'mosaic' };
@@ -500,7 +500,9 @@ async function buildDoc(o, L = 'el', withSign = false) {
   ] }, layout: lay });
   const d = (n, k = 1) => (EN ? n.toLocaleString('en-GB', { minimumFractionDigits: k, maximumFractionDigits: 2 }) : dec(n, k));
   const mon = (n) => (EN ? (Math.round(n * 100) / 100).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : money(n));
-  content.push(heading('1', P.pool));
+  // owner's order: pool → materials with photos → terms → what the offer includes (prices) → acceptance
+  let sec = 0;
+  content.push(heading(String(++sec), P.pool));
   const depth = pc.a === pc.b ? `${d(pc.mean, 2)} m` : `${d(pc.mean, 2)} m (${d(pc.a, 2)} – ${d(pc.b, 2)} m)`;
   content.push({ table: { widths: [150, '*'], body: [
     kv(P.shape, `${P.rect} ${d(pc.L)} × ${d(pc.W)} m`), kv(P.depth, depth),
@@ -508,7 +510,31 @@ async function buildDoc(o, L = 'el', withSign = false) {
     kv(P.turn, `${d(num(o.pool.turn))} ${P.hours}`), kv(P.color, color),
   ] }, layout: lay });
 
-  content.push(heading('2', P.incl));
+  const inclNo = (items.some((it) => it.paras.length || it.img) ? 4 : 3);
+  const described = items.filter((it) => it.paras.length || it.img);
+  if (described.length) {
+    content.push(heading(String(++sec), P.descr));
+    content.push({ text: P.descrHint.replace('{n}', inclNo), fontSize: 8, color: GREY, margin: [0, 0, 0, 8] });
+    described.forEach((it) => {
+      const left = { stack: [
+        { text: [{ text: it.n + '.  ', color: ORANGE }, { text: EN ? it.name.toUpperCase() : greekCaps(it.name), color: NAVY }], bold: true, fontSize: 9.5, margin: [0, 0, 0, 5] },
+        ...it.paras.map((x) => ({ text: x, fontSize: 8.5, margin: [0, 0, 0, 3] })),
+      ] };
+      const row = it.img ? [left, { image: it.img, fit: [140, 85], alignment: 'center' }] : [{ ...left, colSpan: 2 }, {}];
+      content.push({ table: { widths: ['*', 150], body: [row] }, layout: lay, unbreakable: true, margin: [0, 0, 0, 7] });
+    });
+  }
+  content.push(heading(String(++sec), P.terms));
+  content.push({ table: { widths: [150, '*'], body: [
+    kv(P.valid, `${o.terms.validDays} ${P.days}`), kv(P.delivery, term(o.terms.delivery, 'delivery')),
+    kv(P.place, term(o.terms.place, 'place')), kv(P.payment, term(o.terms.payment, 'payment')),
+  ] }, layout: lay });
+  if (o.terms.notIncluded) {
+    content.push({ text: P.notIncl, bold: true, margin: [0, 8, 0, 2] });
+    content.push({ text: term(o.terms.notIncluded, 'notIncluded'), fontSize: 8.5 });
+  }
+  ++sec;
+  content.push({ ...heading(String(inclNo), P.incl), pageBreak: 'before' }); // price table + acceptance together on fresh pages
   const H = (x, al) => ({ text: x, bold: true, color: '#ffffff', fillColor: NAVY, fontSize: 8, alignment: al });
   // no price column when the total is typed by hand or no line has a price; lines without a price print «—»
   const priced = o.lines.some((l) => hasNum(l.price));
@@ -532,17 +558,8 @@ async function buildDoc(o, L = 'el', withSign = false) {
   }
   content.push({ table: { headerRows: 1, dontBreakRows: true, widths: FX ? [24, '*', 60, 90] : [24, '*', 52, 62, 78], body }, layout: lay, fontSize: 8.5 });
 
-  content.push(heading('3', P.terms));
-  content.push({ table: { widths: [150, '*'], body: [
-    kv(P.valid, `${o.terms.validDays} ${P.days}`), kv(P.delivery, term(o.terms.delivery, 'delivery')),
-    kv(P.place, term(o.terms.place, 'place')), kv(P.payment, term(o.terms.payment, 'payment')),
-  ] }, layout: lay });
-  if (o.terms.notIncluded) {
-    content.push({ text: P.notIncl, bold: true, margin: [0, 8, 0, 2] });
-    content.push({ text: term(o.terms.notIncluded, 'notIncluded'), fontSize: 8.5 });
-  }
   content.push({ stack: [
-    heading('4', P.accept),
+    heading(String(++sec), P.accept),
     { text: P.acceptText, fontSize: 8.5, margin: [0, 0, 0, 8] },
     { table: { widths: ['*', '*'], body: [[
       { stack: [{ text: P.forCo, bold: true, color: NAVY, margin: [0, 0, 0, 8] }, { text: sx('signatory'), margin: [0, 0, 0, DB.settings.signImg && withSign ? 34 : 14] }, P.sign,
@@ -552,20 +569,6 @@ async function buildDoc(o, L = 'el', withSign = false) {
     ]] }, layout: lay },
   ], unbreakable: true });
 
-  const described = items.filter((it) => it.paras.length || it.img);
-  if (described.length) {
-    content.push({ text: '', pageBreak: 'after' });
-    content.push(heading('5', P.descr));
-    content.push({ text: P.descrHint, fontSize: 8, color: GREY, margin: [0, 0, 0, 8] });
-    described.forEach((it) => {
-      const left = { stack: [
-        { text: [{ text: it.n + '.  ', color: ORANGE }, { text: EN ? it.name.toUpperCase() : greekCaps(it.name), color: NAVY }], bold: true, fontSize: 9.5, margin: [0, 0, 0, 5] },
-        ...it.paras.map((x) => ({ text: x, fontSize: 8.5, margin: [0, 0, 0, 3] })),
-      ] };
-      const row = it.img ? [left, { image: it.img, fit: [140, 85], alignment: 'center' }] : [{ ...left, colSpan: 2 }, {}];
-      content.push({ table: { widths: ['*', 150], body: [row] }, layout: lay, unbreakable: true, margin: [0, 0, 0, 7] });
-    });
-  }
   return {
     pageSize: 'A4', pageMargins: [40, 82, 40, 50],
     info: { title: `${P.docTitle} ${o.no}`, author: sx('company') },
