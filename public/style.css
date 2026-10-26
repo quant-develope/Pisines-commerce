@@ -111,3 +111,16 @@ input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-
 
 @media (max-width: 430px) { .grid.three { grid-template-columns: 1fr 1fr } .tabs button { font-size: 12.5px } }
 @media (prefers-reduced-motion: no-preference) { .btn:active { transform: scale(.98) } }
+
+/* PDF preview, full screen */
+.pv { position: fixed; inset: 0; z-index: 20; background: #5d6c86; display: grid; grid-template-rows: auto 1fr auto }
+.pv-top, .pv-bot { background: var(--card); display: flex; gap: 10px; align-items: center;
+  padding-left: max(12px, env(safe-area-inset-left, 0px)); padding-right: max(12px, env(safe-area-inset-right, 0px)) }
+.pv-top { justify-content: space-between; padding-top: calc(8px + env(safe-area-inset-top, 0px)); padding-bottom: 8px; border-bottom: 1px solid var(--line) }
+.pv-opts { display: flex; gap: 12px; align-items: center }
+.pv-bot { justify-content: flex-end; padding-top: 10px; padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--line) }
+.pv-bot .btn { flex: 1; max-width: 200px }
+.pv-pages { overflow: auto; -webkit-overflow-scrolling: touch; padding: 12px; display: grid; justify-items: center; align-content: start; gap: 12px }
+.pv-pages canvas { background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,.25); max-width: 100% }
+.pv-pages iframe { width: 100%; height: 100%; min-height: 70vh; border: 0; background: #fff }
+.pv-pages .loading, .pv-pages .hint { color: #fff }

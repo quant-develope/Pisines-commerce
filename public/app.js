@@ -19,7 +19,8 @@ const T = {
     net: 'Без НДС', vat: 'НДС', total: 'Итого с НДС',
     pdf: 'PDF', save: 'Сохранить', saved: 'Сохранено', newOffer: 'Новое', duplicate: 'Копия',
     newConfirm: 'Нажмите ещё раз: начнётся новое предложение.', pdfMissing: 'Нет цены у позиций: ', pdfReady: 'PDF готов', pdfLoading: 'Генератор PDF ещё загружается, подождите пару секунд',
-    share: 'Отправить',
+    share: 'Отправить', download: 'Скачать', sendApps: 'Отправить', sendMail: 'Почта', mailCopied: 'Email клиента скопирован — вставьте его в поле «Кому»', mailAttach: 'PDF скачан — приложите его к письму',
+    appCard: 'Приложение', appHint: 'Установите сайт как приложение: оно откроется с иконки на экране, на весь экран, и покажет последний каталог даже без интернета.', appInstall: 'Установить приложение', appInstalled: 'Приложение установлено ✓', appIos: 'На iPhone: откройте сайт в Safari → кнопка «Поделиться» → «На экран Домой».', appOther: 'Если кнопки нет: меню браузера (⋮) → «Установить приложение» или «Добавить на главный экран».',
     materials: 'Справочник материалов', matHint: 'Здесь хранятся материалы и их цены. В предложении цена подставится сама.', search: 'Поиск', newMaterial: '+ Новый материал', editCategories: 'Категории',
     matEdit: 'Материал', category: 'Категория', nameEl: 'Название (греч.) — идёт в PDF', nameRu: 'Название (рус.)', unit: 'Единица', defQty: 'Кол-во по умолч.', price: 'Цена за ед. без НДС, €', warranty: 'Гарантия (греч.)', desc: 'Описание для PDF (греч.). Пустая строка = новый абзац. {color} = цвет мембраны', photo: 'Фото', uploadPhoto: 'Загрузить фото', dropPhoto: 'или перетащите файл с фото сюда', dropBad: 'Это не картинка', removePhoto: 'Убрать фото', isDefault: 'Добавлять в новое предложение автоматически', del: 'Удалить', delConfirm: 'Нажмите ещё раз для удаления', back: '← Назад',
     units: { pcs: 'шт.', set: 'компл.', m: 'м', m2: 'м²', perim: 'м (периметр, считается сам)', area: 'м² (площадь воды, считается сам)' },
@@ -48,7 +49,8 @@ const T = {
     net: 'Καθαρή αξία', vat: 'ΦΠΑ', total: 'Σύνολο με ΦΠΑ',
     pdf: 'PDF', save: 'Αποθήκευση', saved: 'Αποθηκεύτηκε', newOffer: 'Νέα', duplicate: 'Αντίγραφο',
     newConfirm: 'Πατήστε ξανά για νέα προσφορά.', pdfMissing: 'Χωρίς τιμή: ', pdfReady: 'Το PDF είναι έτοιμο', pdfLoading: 'Η δημιουργία PDF φορτώνει, περιμένετε λίγο',
-    share: 'Αποστολή',
+    share: 'Αποστολή', download: 'Λήψη', sendApps: 'Αποστολή', sendMail: 'Email', mailCopied: 'Το email του πελάτη αντιγράφηκε — επικολλήστε το στο «Προς»', mailAttach: 'Το PDF κατέβηκε — επισυνάψτε το στο email',
+    appCard: 'Εφαρμογή', appHint: 'Εγκαταστήστε τον ιστότοπο ως εφαρμογή: ανοίγει από εικονίδιο, σε πλήρη οθόνη, και δείχνει τον τελευταίο κατάλογο και χωρίς internet.', appInstall: 'Εγκατάσταση εφαρμογής', appInstalled: 'Η εφαρμογή είναι εγκατεστημένη ✓', appIos: 'Σε iPhone: ανοίξτε τον ιστότοπο στο Safari → «Κοινοποίηση» → «Προσθήκη στην οθόνη Αφετηρίας».', appOther: 'Αν δεν υπάρχει κουμπί: μενού του browser (⋮) → «Εγκατάσταση εφαρμογής».',
     materials: 'Κατάλογος υλικών', matHint: 'Εδώ φυλάσσονται τα υλικά και οι τιμές τους. Στην προσφορά η τιμή μπαίνει αυτόματα.', search: 'Αναζήτηση', newMaterial: '+ Νέο υλικό', editCategories: 'Κατηγορίες',
     matEdit: 'Υλικό', category: 'Κατηγορία', nameEl: 'Όνομα (ελληνικά) — στο PDF', nameRu: 'Όνομα (ρωσικά)', unit: 'Μονάδα', defQty: 'Προεπιλ. ποσότητα', price: 'Τιμή μονάδας χωρίς ΦΠΑ, €', warranty: 'Εγγύηση', desc: 'Περιγραφή για το PDF. Κενή γραμμή = νέα παράγραφος. {color} = χρώμα μεμβράνης', photo: 'Φωτογραφία', uploadPhoto: 'Ανέβασμα φωτογραφίας', dropPhoto: 'ή σύρετε εδώ το αρχείο της φωτογραφίας', dropBad: 'Δεν είναι εικόνα', removePhoto: 'Αφαίρεση φωτογραφίας', isDefault: 'Μπαίνει αυτόματα σε νέα προσφορά', del: 'Διαγραφή', delConfirm: 'Πατήστε ξανά για διαγραφή', back: '← Πίσω',
     units: { pcs: 'τεμ.', set: 'σετ', m: 'm', m2: 'm²', perim: 'm (περίμετρος, αυτόματα)', area: 'm² (επιφάνεια νερού, αυτόματα)' },
@@ -188,9 +190,9 @@ async function boot() {
 function applyLang() {
   document.documentElement.lang = lang;
   $$('[data-t]').forEach((el) => { el.textContent = t(el.dataset.t); });
-  $$('.lang button').forEach((b) => b.classList.toggle('on', b.dataset.lang === lang));
+  $$('[data-lang]').forEach((b) => b.classList.toggle('on', b.dataset.lang === lang));
 }
-$$('.lang button').forEach((b) => b.addEventListener('click', () => { lang = b.dataset.lang; store.set('lang', lang); applyLang(); if (token && DB.categories.length) show(view); else boot(); }));
+$$('[data-lang]').forEach((b) => b.addEventListener('click', () => { lang = b.dataset.lang; store.set('lang', lang); applyLang(); if (token && DB.categories.length) show(view); else boot(); }));
 $$('#tabs button').forEach((b) => b.addEventListener('click', () => show(b.dataset.view)));
 
 function show(v) {
@@ -315,12 +317,8 @@ function renderOffer() {
   </div><div class="row"><button class="btn" id="tplSave" type="button">${esc(t('saveAsTemplate'))}</button></div></section>
   <div class="row"><button class="btn" id="saveBtn" type="button">${esc(t('save'))}</button><button class="btn" id="dupBtn" type="button">${esc(t('duplicate'))}</button><button class="btn" id="newBtn" type="button">${esc(t('newOffer'))}</button></div>
   <div class="bar"><div class="in"><div class="tot"><span id="totSub"></span><b id="totVal"></b></div>
-    <button class="btn" id="shareBtn" type="button" hidden>${esc(t('share'))}</button>
-    ${DB.settings.signImg ? `<label class="signtog" title="${esc(t('pdfSign'))}"><input type="checkbox" id="pdfSign">${esc(t('signShort'))}</label>` : ''}
-    <select id="pdfLang" aria-label="${esc(t('pdfLang'))}" style="width:auto"><option value="el">ΕΛ</option><option value="en">EN</option></select>
     <button class="btn main" id="pdfBtn" type="button">${esc(t('pdf'))}</button></div></div>`;
   $('#app').innerHTML = html;
-  if (navigator.canShare && navigator.canShare({ files: [new File(['x'], 'x.pdf', { type: 'application/pdf' })] })) $('#shareBtn').hidden = false;
 
   const bind = (id, fn) => $('#' + id).addEventListener('input', (e) => { fn(e.target.value); saveDraft(); updateTotals(); });
   bind('o_no', (v) => { o.no = v; }); bind('o_date', (v) => { o.date = v; }); bind('o_client', (v) => { o.client = v; });
@@ -339,9 +337,6 @@ function renderOffer() {
   });
   $('#o_discount').closest('label').hidden = !!o.fixedTotal;
   bind('o_sub', (v) => { o.subtitle_el = v; }); bind('o_sub_en', (v) => { o.subtitle_en = v; });
-  $('#pdfLang').value = store.get('pdfLang', 'el');
-  $('#pdfLang').onchange = (e) => store.set('pdfLang', e.target.value);
-  if ($('#pdfSign')) { $('#pdfSign').checked = store.get('pdfSign', true) !== false; $('#pdfSign').onchange = (e) => store.set('pdfSign', e.target.checked); }
   const syncTplName = () => { $('#tplNameBox').hidden = $('#tplTarget').value !== ''; };
   $('#tplTarget').onchange = syncTplName; syncTplName();
   $('#tplSave').onclick = async () => {
@@ -390,8 +385,7 @@ function renderOffer() {
   $('#saveBtn').onclick = () => saveOffer();
   $('#dupBtn').onclick = () => { offer = { ...structuredClone(o), id: null, no: offerNo(DB.settings.nextNo || 1), date: today(), client: '', phone: '', email: '', site: '' }; saveDraft(); renderOffer(); toast(t('duplicate') + ' ✓'); };
   $('#newBtn').onclick = () => renderTemplatePicker();
-  $('#pdfBtn').onclick = () => makePdf('download', $('#pdfLang').value);
-  $('#shareBtn').onclick = () => makePdf('share', $('#pdfLang').value);
+  $('#pdfBtn').onclick = openPreview;
   updateTotals();
 }
 function rerenderLine(l) {
@@ -613,26 +607,97 @@ function pdfName(o, L) {
   const who = (o.client || (L === 'en' ? 'client' : 'pelatis')).trim().replace(/[\\/:*?"<>|]+/g, '').replace(/\s+/g, '_');
   return `${L === 'en' ? 'Offer' : 'Prosfora'}_${String(o.no || '').replace(/\//g, '-')}_${who}.pdf`;
 }
-async function makePdf(mode, L = 'el') {
+// ---------- PDF preview and sending ----------
+// The PDF button opens a full-screen preview; language and signature are switched there, then download / share / email.
+let pv = null, pvRun = 0;
+const canShareFiles = () => Boolean(navigator.canShare && navigator.canShare({ files: [new File(['x'], 'x.pdf', { type: 'application/pdf' })] }));
+
+async function openPreview() {
   if (!window.pdfMake) return toast(t('pdfLoading'), true);
   const c = totals(offer);
   if (offer.fixedTotal && !num(offer.fixedNet)) return toast(t('fixedNet'), true);
   if (c.missing.length) return toast(t('pdfMissing') + c.missing.join(', '), true);
-  const btn = $(mode === 'share' ? '#shareBtn' : '#pdfBtn'); btn.disabled = true;
+  try { await saveOffer(true); } catch (e) { /* saving is best effort; the PDF is built from the screen */ }
+  $('#pvSignBox').hidden = !DB.settings.signImg;
+  $('#pvSign').checked = store.get('pdfSign', true) !== false;
+  $('#pv').hidden = false; document.body.style.overflow = 'hidden';
+  history.pushState({ pv: 1 }, '');
+  renderPreview();
+}
+function closePreview(fromHistory) {
+  if ($('#pv').hidden) return;
+  $('#pv').hidden = true; document.body.style.overflow = ''; pv = null; pvRun++;
+  $('#pvPages').innerHTML = '';
+  if (!fromHistory && history.state && history.state.pv) history.back();
+}
+async function renderPreview() {
+  const run = ++pvRun, L = store.get('pdfLang', 'el'), sign = Boolean(DB.settings.signImg) && $('#pvSign').checked;
+  $$('[data-pvlang]').forEach((b) => b.classList.toggle('on', b.dataset.pvlang === L));
+  ['#pvDl', '#pvMail', '#pvShare'].forEach((x) => { $(x).disabled = true; });
+  const box = $('#pvPages'); box.innerHTML = '<p class="loading">…</p>';
   try {
-    await saveOffer(true);
-    const doc = await buildDoc(offer, L, Boolean($('#pdfSign') && $('#pdfSign').checked));
+    const doc = await buildDoc(offer, L, sign);
     const blob = await new Promise((res) => pdfMake.createPdf(doc).getBlob(res));
-    const name = pdfName(offer, L);
-    if (mode === 'share') {
-      try { await navigator.share({ files: [new File([blob], name, { type: 'application/pdf' })], title: name }); } catch (e) { if (e.name !== 'AbortError') toast(String(e.message || e), true); }
+    if (run !== pvRun) return;
+    pv = { blob, name: pdfName(offer, L), L };
+    if (window.pdfjsLib) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = '/vendor/pdf.worker.min.js';
+      const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(await blob.arrayBuffer()) }).promise;
+      const w = Math.min(box.clientWidth - 24, 820), dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+      const pages = [];
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i), vp = page.getViewport({ scale: (w / page.getViewport({ scale: 1 }).width) * dpr });
+        const cv = document.createElement('canvas'); cv.width = vp.width; cv.height = vp.height; cv.style.width = w + 'px';
+        await page.render({ canvasContext: cv.getContext('2d'), viewport: vp }).promise;
+        if (run !== pvRun) return;
+        pages.push(cv);
+      }
+      box.innerHTML = ''; pages.forEach((cv) => box.appendChild(cv));
     } else {
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
-      setTimeout(() => URL.revokeObjectURL(url), 30000);
-      toast(t('pdfReady'));
+      box.innerHTML = `<iframe title="PDF" src="${URL.createObjectURL(blob)}"></iframe>`;
     }
-  } catch (e) { toast(String(e.message || e), true); } finally { btn.disabled = false; }
+    ['#pvDl', '#pvMail', '#pvShare'].forEach((x) => { $(x).disabled = false; });
+  } catch (e) { if (run === pvRun) box.innerHTML = `<p class="hint">${esc(String(e.message || e))}</p>`; }
+}
+function pvDownload() {
+  const url = URL.createObjectURL(pv.blob);
+  const a = document.createElement('a'); a.href = url; a.download = pv.name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 30000);
+}
+function mailText(L) {
+  const s = DB.settings, en = L === 'en';
+  const subject = `${en ? 'Commercial offer' : 'Οικονομική προσφορά'} ${offer.no || ''} · ${(en && s.company_en) || s.company || ''}`.trim();
+  const body = en
+    ? `Hello${offer.client ? ' ' + offer.client : ''},\n\nPlease find attached our commercial offer no. ${offer.no || ''}.\nWe are at your disposal for any further information.\n\nKind regards,\n${s.signatory_en || s.signatory || ''}\n${s.company_en || s.company || ''}\n${s.phones || ''}`
+    : `Καλησπέρα σας${offer.client ? ' ' + offer.client : ''},\n\nσας στέλνουμε συνημμένη την οικονομική προσφορά αρ. ${offer.no || ''}.\nΕίμαστε στη διάθεσή σας για κάθε πληροφορία.\n\nΜε εκτίμηση,\n${s.signatory || ''}\n${s.company || ''}\n${s.phones || ''}`;
+  return { subject, body };
+}
+async function pvShare(withText) {
+  const file = new File([pv.blob], pv.name, { type: 'application/pdf' });
+  const m = mailText(pv.L);
+  try { await navigator.share(withText ? { files: [file], title: m.subject, text: m.body } : { files: [file], title: pv.name }); }
+  catch (e) { if (e.name !== 'AbortError') toast(String(e.message || e), true); }
+}
+async function pvMail() {
+  const m = mailText(pv.L), to = (offer.email || '').trim();
+  if (canShareFiles()) {
+    // phones: the share sheet attaches the PDF; the address can't be pre-filled there, so it goes to the clipboard
+    if (to) { try { await navigator.clipboard.writeText(to); toast(t('mailCopied')); } catch (e) { /* no clipboard: the address is still in the offer */ } }
+    return pvShare(true);
+  }
+  pvDownload();
+  location.href = `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(m.subject)}&body=${encodeURIComponent(m.body)}`;
+  toast(t('mailAttach'));
+}
+function initPreview() {
+  $('#pvClose').onclick = () => closePreview();
+  $$('[data-pvlang]').forEach((b) => b.addEventListener('click', () => { store.set('pdfLang', b.dataset.pvlang); renderPreview(); }));
+  $('#pvSign').onchange = (e) => { store.set('pdfSign', e.target.checked); renderPreview(); };
+  $('#pvDl').onclick = () => { pvDownload(); toast(t('pdfReady')); };
+  $('#pvShare').onclick = () => (canShareFiles() ? pvShare(false) : (pvDownload(), toast(t('pdfReady'))));
+  $('#pvMail').onclick = pvMail;
+  window.addEventListener('popstate', () => closePreview(true));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closePreview(); });
 }
 
 // ---------- materials view ----------
@@ -796,6 +861,9 @@ function renderSettings() {
       <div class="row"><label class="btn small">${esc(t('signUpload'))}<input id="signFile" type="file" accept="image/*" hidden></label>
       <button class="btn small" id="signDel" type="button" ${s.signImg ? '' : 'hidden'}>${esc(t('signRemove'))}</button>
       <span class="hint">${esc(t('signDrop'))}</span></div></div></section>
+  <section class="card"><h2>${esc(t('appCard'))}</h2><p class="hint">${esc(t('appHint'))}</p>
+    ${standalone() ? `<p><b>${esc(t('appInstalled'))}</b></p>` : `<div class="row"><button class="btn main" id="appInstall" type="button" ${installEvt ? '' : 'hidden'}>${esc(t('appInstall'))}</button></div>
+    <p class="hint" ${installEvt ? 'hidden' : ''}>${esc(/iphone|ipad|ipod/i.test(navigator.userAgent) ? t('appIos') : t('appOther'))}</p>`}</section>
   <section class="card"><h2>${esc(t('changePin'))}</h2><div class="grid">
     <label class="f">${esc(t('newPin'))}<input id="np1" type="password" inputmode="numeric" autocomplete="new-password"></label>
     <label class="f">${esc(t('pin2'))}<input id="np2" type="password" inputmode="numeric" autocomplete="new-password"></label></div>
@@ -832,7 +900,14 @@ function renderSettings() {
   $('#signFile').onchange = (e) => setSign(e.target.files[0]);
   $('#signDel').onclick = () => putSign('');
   dropZone($('#signCard'), $('#signDrop'), setSign);
+  if ($('#appInstall')) $('#appInstall').onclick = async () => { if (!installEvt) return; installEvt.prompt(); await installEvt.userChoice; installEvt = null; renderSettings(); };
 }
+
+// ---------- installable app ----------
+let installEvt = null;
+const standalone = () => window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); installEvt = e; if (view === 'settings') renderSettings(); });
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
 
 // Photo of a signature on paper -> trimmed PNG: light paper becomes transparent, ink becomes dark blue.
 function signPng(bmp) {
@@ -868,6 +943,7 @@ function dropZone(card, box, onFile) {
   card.ondrop = (e) => { e.preventDefault(); depth = 0; box.classList.remove('over'); onFile(e.dataTransfer.files[0]); };
 }
 
+initPreview();
 boot();
 
 // a file dropped outside the photo box must not make the browser leave the app

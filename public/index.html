@@ -9,6 +9,11 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Προσφορές">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Commissioner:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="/style.css">
@@ -28,8 +33,22 @@
 </nav>
 <main id="app"><p class="loading">…</p></main>
 <div class="toast" id="toast" role="status" hidden></div>
+<div class="pv" id="pv" hidden role="dialog" aria-modal="true">
+  <div class="pv-top">
+    <button class="btn small" id="pvClose" type="button" aria-label="Close">✕</button>
+    <div class="pv-opts"><label class="signtog" id="pvSignBox"><input type="checkbox" id="pvSign"><span data-t="signShort"></span></label>
+      <div class="lang"><button type="button" data-pvlang="el">ΕΛ</button><button type="button" data-pvlang="en">EN</button></div></div>
+  </div>
+  <div class="pv-pages" id="pvPages"></div>
+  <div class="pv-bot">
+    <button class="btn" id="pvDl" type="button" data-t="download"></button>
+    <button class="btn" id="pvMail" type="button" data-t="sendMail"></button>
+    <button class="btn main" id="pvShare" type="button" data-t="sendApps"></button>
+  </div>
+</div>
 <script src="/vendor/pdfmake.min.js" defer></script>
 <script src="/vendor/vfs_fonts.js" defer></script>
+<script src="/vendor/pdf.min.js" defer></script>
 <script src="/app.js" defer></script>
 </body>
 </html>
