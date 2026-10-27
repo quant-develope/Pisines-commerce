@@ -69,11 +69,11 @@ input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-
 .line .cat span:first-child { flex: 1; min-width: 0 }
 .line .cat .sum { font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums }
 .line .cat button { border: 0; background: none; color: var(--muted); font-size: 20px; line-height: 1; padding: 0 4px; cursor: pointer }
-.line .nums { display: grid; grid-template-columns: 74px 1fr auto; gap: 8px; align-items: end }
-.line .nums input { padding: 7px 9px }
+.line .nums { display: grid; grid-template-columns: 112px 112px auto; justify-content: start; gap: 8px; align-items: end }
+.line .nums input { padding: 7px 8px }
 .noprice { color: var(--warn); font-size: 12.5px }
 #lines.fixed .pp { display: none }
-#lines.fixed .nums { grid-template-columns: 110px }
+#lines.fixed .nums { grid-template-columns: 112px }
 .custom-tag { font-size: 11.5px; color: var(--orange); font-weight: 600 }
 
 /* bottom bar */
