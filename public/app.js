@@ -285,7 +285,7 @@ function renderOffer() {
   const tplName = (() => { const x = (s.templates || []).find((y) => y.id === o.template); return x ? (lang === 'ru' ? x.ru || x.el : x.el) : ''; })();
   let html = `<h1 class="page">${esc(t('tabOffer'))} ${esc(o.no)}</h1>${tplName ? `<p class="hint">${esc(t('template'))}: ${esc(tplName)}</p>` : ''}
   <section class="card"><h2>${esc(t('client'))}</h2><div class="grid">
-    ${fld('o_no', t('offerNo'), o.no)}${fld('o_date', t('date'), o.date, 'type="date"')}
+    <div class="full">${fld('o_date', t('date'), o.date, 'type="date"')}</div>
     <div class="full">${fld('o_client', t('clientName'), o.client)}</div>
     ${fld('o_phone', t('phone'), o.phone, 'inputmode="tel"')}${fld('o_email', t('email'), o.email, 'inputmode="email"')}
     <div class="full">${fld('o_site', t('site'), o.site)}</div></div></section>
@@ -325,7 +325,7 @@ function renderOffer() {
   $('#app').innerHTML = html;
 
   const bind = (id, fn) => $('#' + id).addEventListener('input', (e) => { fn(e.target.value); saveDraft(); updateTotals(); });
-  bind('o_no', (v) => { o.no = v; }); bind('o_date', (v) => { o.date = v; }); bind('o_client', (v) => { o.client = v; });
+  bind('o_date', (v) => { o.date = v; }); bind('o_client', (v) => { o.client = v; });
   bind('o_phone', (v) => { o.phone = v; }); bind('o_email', (v) => { o.email = v; }); bind('o_site', (v) => { o.site = v; });
   ['len', 'wid', 'turn', 'dmin', 'dmax'].forEach((k) => bind('p_' + k, (v) => { o.pool[k] = v; refreshAutoQty(); }));
   $('#p_color').addEventListener('change', (e) => { o.pool.color = e.target.value; saveDraft(); });
