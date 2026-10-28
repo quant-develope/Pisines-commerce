@@ -19,7 +19,7 @@ const T = {
     net: 'Без НДС', vat: 'НДС', total: 'Итого с НДС',
     pdf: 'PDF', save: 'Сохранить', saved: 'Сохранено', newOffer: 'Новое', duplicate: 'Копия',
     newConfirm: 'Нажмите ещё раз: начнётся новое предложение.', pdfMissing: 'Нет цены у позиций: ', pdfReady: 'PDF готов', pdfLoading: 'Генератор PDF ещё загружается, подождите пару секунд',
-    share: 'Отправить', download: 'Скачать', sendApps: 'Отправить',
+    share: 'Отправить', download: 'Скачать', sendApps: 'Отправить', sendViber: 'Отправить в Viber', pdfSaved: 'PDF сохранён', viberCopied: 'Ссылка на PDF скопирована. Если Viber не открылся, вставьте её в чат вручную.', viberUp: 'Готовлю ссылку…',
     appCard: 'Приложение', appHint: 'Установите сайт как приложение: оно откроется с иконки на экране, на весь экран, и покажет последний каталог даже без интернета.', appInstall: 'Установить приложение', appInstalled: 'Приложение установлено ✓', appIos: 'На iPhone: откройте сайт в Safari → кнопка «Поделиться» → «На экран Домой».', appOther: 'Если кнопки нет: меню браузера (⋮) → «Установить приложение» или «Добавить на главный экран».',
     materials: 'Справочник материалов', matHint: 'Здесь хранятся материалы и их цены. В предложении цена подставится сама.', search: 'Поиск', newMaterial: '+ Новый материал', editCategories: 'Категории',
     matEdit: 'Материал', category: 'Категория', nameEl: 'Название (греч.) — идёт в PDF', nameRu: 'Название (рус.)', unit: 'Единица', defQty: 'Кол-во по умолч.', price: 'Цена за ед. без НДС, €', warranty: 'Гарантия (греч.)', desc: 'Описание для PDF (греч.). Пустая строка = новый абзац. {color} = цвет мембраны', photo: 'Фото', uploadPhoto: 'Загрузить фото', dropPhoto: 'или перетащите файл с фото сюда', dropBad: 'Это не картинка', removePhoto: 'Убрать фото', isDefault: 'Добавлять в новое предложение автоматически', del: 'Удалить', delConfirm: 'Нажмите ещё раз для удаления', back: '← Назад',
@@ -51,7 +51,7 @@ const T = {
     net: 'Καθαρή αξία', vat: 'ΦΠΑ', total: 'Σύνολο με ΦΠΑ',
     pdf: 'PDF', save: 'Αποθήκευση', saved: 'Αποθηκεύτηκε', newOffer: 'Νέα', duplicate: 'Αντίγραφο',
     newConfirm: 'Πατήστε ξανά για νέα προσφορά.', pdfMissing: 'Χωρίς τιμή: ', pdfReady: 'Το PDF είναι έτοιμο', pdfLoading: 'Η δημιουργία PDF φορτώνει, περιμένετε λίγο',
-    share: 'Αποστολή', download: 'Λήψη', sendApps: 'Αποστολή',
+    share: 'Αποστολή', download: 'Λήψη', sendApps: 'Αποστολή', sendViber: 'Αποστολή στο Viber', pdfSaved: 'Το PDF αποθηκεύτηκε', viberCopied: 'Ο σύνδεσμος του PDF αντιγράφηκε. Αν δεν άνοιξε το Viber, επικολλήστε τον στη συνομιλία.', viberUp: 'Ετοιμάζω τον σύνδεσμο…',
     appCard: 'Εφαρμογή', appHint: 'Εγκαταστήστε τον ιστότοπο ως εφαρμογή: ανοίγει από εικονίδιο, σε πλήρη οθόνη, και δείχνει τον τελευταίο κατάλογο και χωρίς internet.', appInstall: 'Εγκατάσταση εφαρμογής', appInstalled: 'Η εφαρμογή είναι εγκατεστημένη ✓', appIos: 'Σε iPhone: ανοίξτε τον ιστότοπο στο Safari → «Κοινοποίηση» → «Προσθήκη στην οθόνη Αφετηρίας».', appOther: 'Αν δεν υπάρχει κουμπί: μενού του browser (⋮) → «Εγκατάσταση εφαρμογής».',
     materials: 'Κατάλογος υλικών', matHint: 'Εδώ φυλάσσονται τα υλικά και οι τιμές τους. Στην προσφορά η τιμή μπαίνει αυτόματα.', search: 'Αναζήτηση', newMaterial: '+ Νέο υλικό', editCategories: 'Κατηγορίες',
     matEdit: 'Υλικό', category: 'Κατηγορία', nameEl: 'Όνομα (ελληνικά) — στο PDF', nameRu: 'Όνομα (ρωσικά)', unit: 'Μονάδα', defQty: 'Προεπιλ. ποσότητα', price: 'Τιμή μονάδας χωρίς ΦΠΑ, €', warranty: 'Εγγύηση', desc: 'Περιγραφή για το PDF. Κενή γραμμή = νέα παράγραφος. {color} = χρώμα μεμβράνης', photo: 'Φωτογραφία', uploadPhoto: 'Ανέβασμα φωτογραφίας', dropPhoto: 'ή σύρετε εδώ το αρχείο της φωτογραφίας', dropBad: 'Δεν είναι εικόνα', removePhoto: 'Αφαίρεση φωτογραφίας', isDefault: 'Μπαίνει αυτόματα σε νέα προσφορά', del: 'Διαγραφή', delConfirm: 'Πατήστε ξανά για διαγραφή', back: '← Πίσω',
@@ -669,6 +669,30 @@ async function renderPreview() {
     ['#pvDl', '#pvShare'].forEach((x) => { $(x).disabled = false; });
   } catch (e) { if (run === pvRun) box.innerHTML = `<p class="hint">${esc(String(e.message || e))}</p>`; }
 }
+// computer: real «Save as» dialog where the browser has it (Chrome, Edge); elsewhere a normal download
+const desktop = () => !/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) && window.matchMedia('(pointer: fine)').matches;
+async function pvSave() {
+  if (window.showSaveFilePicker) {
+    try {
+      const h = await window.showSaveFilePicker({ suggestedName: pv.name, types: [{ description: 'PDF', accept: { 'application/pdf': ['.pdf'] } }] });
+      const w = await h.createWritable(); await w.write(pv.blob); await w.close();
+      return toast(t('pdfSaved'));
+    } catch (e) { if (e.name === 'AbortError') return; }
+  }
+  pvDownload(); toast(t('pdfReady'));
+}
+// computer: Viber can't take a file from a web page, so the PDF goes up as a private link and Viber opens to pick the chat
+async function pvViber() {
+  toast(t('viberUp'));
+  const res = await fetch('/api/files?name=' + encodeURIComponent(pv.name), { method: 'POST', headers: { 'content-type': 'application/pdf', authorization: 'Bearer ' + token }, body: pv.blob });
+  if (!res.ok) return toast(t('netErr'), true);
+  const link = location.origin + (await res.json()).url;
+  const s = DB.settings, en = pv.L === 'en';
+  const text = `${en ? 'Commercial offer' : 'Οικονομική προσφορά'} ${offer.no || ''} · ${(en && s.company_en) || s.company || ''}\n${link}`;
+  try { await navigator.clipboard.writeText(link); } catch (e) { /* clipboard is optional */ }
+  location.href = 'viber://forward?text=' + encodeURIComponent(text);
+  toast(t('viberCopied'));
+}
 function pvDownload() {
   const url = URL.createObjectURL(pv.blob);
   const a = document.createElement('a'); a.href = url; a.download = pv.name; document.body.appendChild(a); a.click(); a.remove();
@@ -747,8 +771,9 @@ function initPreview() {
   $('#pvClose').onclick = () => closePreview();
   $$('[data-pvlang]').forEach((b) => b.addEventListener('click', () => { store.set('pdfLang', b.dataset.pvlang); if (!$('#pvEdit').hidden) openFmt(); renderPreview(); }));
   $('#pvSign').onchange = (e) => { store.set('pdfSign', e.target.checked); renderPreview(); };
-  $('#pvDl').onclick = () => { pvDownload(); toast(t('pdfReady')); };
-  $('#pvShare').onclick = () => (canShareFiles() ? pvShare() : (pvDownload(), toast(t('pdfReady'))));
+  $('#pvDl').onclick = pvSave;
+  $('#pvShare').onclick = () => (desktop() ? pvViber() : canShareFiles() ? pvShare() : (pvDownload(), toast(t('pdfReady'))));
+  if (desktop()) $('#pvShare').dataset.t = 'sendViber';
   window.addEventListener('popstate', () => closePreview(true));
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closePreview(); });
 }

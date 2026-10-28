@@ -171,6 +171,19 @@ export class Store extends DurableObject {
       await S.delete('fails');
       return json({ token: await this.issueToken() });
     }
+    // shared PDF (link sent through Viber from a computer); the long random id is the only key
+    const shared = path.match(/^\/f\/([0-9a-f]{32})(?:\/[^/]*)?$/);
+    if (shared && method === 'GET') {
+      const meta = await S.get('file:' + shared[1]);
+      if (!meta) return new Response('Not found', { status: 404 });
+      const parts = await S.get([...Array(meta.n).keys()].map((i) => `filec:${shared[1]}:${i}`));
+      const out = new Uint8Array(meta.size); let at = 0;
+      for (let i = 0; i < meta.n; i++) { const c = parts.get(`filec:${shared[1]}:${i}`); out.set(c, at); at += c.length; }
+      return new Response(out, { headers: {
+        'content-type': 'application/pdf', 'cache-control': 'private, max-age=3600',
+        'content-disposition': `inline; filename*=UTF-8''${encodeURIComponent(meta.name)}`,
+      } });
+    }
     const img = path.match(/^\/img\/([\w-]+)$/);
     if (img && method === 'GET') {
       const rec = await S.get('img:' + img[1]);
@@ -215,6 +228,24 @@ export class Store extends DurableObject {
       if (m && m.imageId) await S.delete('img:' + m.imageId);
       await S.delete('mat:' + mat[1]);
       return json({ ok: true });
+    }
+    if (path === '/files' && method === 'POST') {
+      // raw PDF body; kept 60 days, split in 1 MB pieces (storage value size limit)
+      const buf = new Uint8Array(await request.arrayBuffer());
+      if (!buf.length || buf.length > 20_000_000) return json({ error: 'bad_file' }, 400);
+      const name = String(url.searchParams.get('name') || 'offer.pdf').replace(/[\\/:*?"<>|]+/g, '').slice(0, 120) || 'offer.pdf';
+      const old = await S.list({ prefix: 'file:' });
+      for (const [k, f] of old) {
+        if (Date.now() - f.created < 60 * 864e5) continue;
+        const fid = k.slice(5);
+        await S.delete([k, ...[...Array(f.n).keys()].map((i) => `filec:${fid}:${i}`)]);
+      }
+      const id = crypto.randomUUID().replace(/-/g, ''), CH = 1_000_000, batch = {};
+      const n = Math.ceil(buf.length / CH);
+      for (let i = 0; i < n; i++) batch[`filec:${id}:${i}`] = buf.slice(i * CH, (i + 1) * CH);
+      await S.put(batch);
+      await S.put('file:' + id, { name, n, size: buf.length, created: Date.now() });
+      return json({ url: `/api/f/${id}/${encodeURIComponent(name)}` });
     }
     if (path === '/images' && method === 'POST') {
       const { data } = await body(); // data:image/jpeg;base64,...
