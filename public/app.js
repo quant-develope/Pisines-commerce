@@ -437,6 +437,19 @@ async function dataUrl(src) {
     return (imgCache[src] = cv.toDataURL('image/jpeg', 0.85));
   } catch { return null; }
 }
+// Photo for the materials section, filling a w×h pt frame: cropped to the frame (at most 20% off each side,
+// so colour charts keep their swatches); whatever is left over is white.
+async function coverImg(dataurl, w, h) {
+  const bmp = await createImageBitmap(await (await fetch(dataurl)).blob());
+  const S = 3, cv = document.createElement('canvas'); cv.width = Math.round(w * S); cv.height = Math.round(h * S);
+  const cx = cv.getContext('2d'); cx.fillStyle = '#fff'; cx.fillRect(0, 0, cv.width, cv.height);
+  const ir = bmp.width / bmp.height, fr = w / h;
+  let sw = bmp.width, sh = bmp.height;
+  if (ir > fr) sw = Math.max(bmp.width * 0.6, bmp.height * fr); else sh = Math.max(bmp.height * 0.6, bmp.width / fr);
+  const k = Math.min(cv.width / sw, cv.height / sh), dw = sw * k, dh = sh * k;
+  cx.drawImage(bmp, (bmp.width - sw) / 2, (bmp.height - sh) / 2, sw, sh, (cv.width - dw) / 2, (cv.height - dh) / 2, dw, dh);
+  return cv.toDataURL('image/jpeg', 0.85);
+}
 const greekCaps = (s) => s.normalize('NFD').replace(/́/g, '').normalize('NFC').toUpperCase();
 const fmtDate = (iso) => { const m = String(iso).match(/^(\d{4})-(\d{2})-(\d{2})$/); return m ? `${m[3]}.${m[2]}.${m[1]}` : iso; };
 const lay = { hLineWidth: () => 0.6, vLineWidth: () => 0.6, hLineColor: () => LINE, vLineColor: () => LINE, paddingLeft: () => 5, paddingRight: () => 5, paddingTop: () => 3.5, paddingBottom: () => 3.5 };
@@ -535,14 +548,21 @@ async function buildDoc(o, L = 'el', withSign = false) {
   if (described.length) {
     content.push(heading(String(++sec), P.descr));
     content.push({ text: P.descrHint.replace('{n}', inclNo), fontSize: 8, color: GREY, margin: [0, 0, 0, 8] });
-    described.forEach((it) => {
+    for (const it of described) {
       const left = { stack: [
         { text: [{ text: it.n + '.  ', color: ORANGE }, { text: EN ? it.name.toUpperCase() : greekCaps(it.name), color: NAVY }], bold: true, fontSize: 9.5, margin: [0, 0, 0, 5] },
         ...it.paras.map((x) => ({ text: x, fontSize: 8.5, margin: [0, 0, 0, 3] })),
       ] };
-      const row = it.img ? [left, { image: it.img, fit: [140, 85], alignment: 'center' }] : [{ ...left, colSpan: 2 }, {}];
-      content.push({ table: { widths: ['*', 150], body: [row] }, layout: lay, unbreakable: true, margin: [0, 0, 0, 7] });
-    });
+      if (!it.img) { content.push({ table: { widths: ['*', 150], body: [[{ ...left, colSpan: 2 }, {}]] }, layout: lay, unbreakable: true, margin: [0, 0, 0, 7] }); continue; }
+      // the photo fills its whole cell: its height follows the estimated height of the text next to it
+      const lines = (txt, size, cpl) => Math.max(1, Math.ceil(txt.length / cpl)) * size * 1.15 * 1.08;
+      const textH = 8 + lines(it.name, 9.5, 62) + 5 + it.paras.reduce((a, x) => a + lines(x, 8.5, 80) + 3, 0);
+      const h = Math.min(170, Math.max(80, textH));
+      const pic = await coverImg(it.img, 150, h);
+      content.push({ table: { widths: ['*', 150], heights: [h], body: [[{ ...left, margin: [0, 4, 0, 4] }, { image: pic, width: 150, height: h }]] },
+        layout: { ...lay, paddingLeft: (i) => (i === 1 ? 0 : 5), paddingRight: (i) => (i === 1 ? 0 : 5), paddingTop: () => 0, paddingBottom: () => 0 },
+        unbreakable: true, margin: [0, 0, 0, 7] });
+    }
   }
   if (!HIDE.terms) {
     content.push(heading(String(++sec), P.terms));
