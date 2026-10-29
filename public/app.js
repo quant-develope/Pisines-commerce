@@ -553,8 +553,12 @@ async function buildDoc(o, L = 'el', withSign = false) {
         { text: [{ text: it.n + '.  ', color: ORANGE }, { text: EN ? it.name.toUpperCase() : greekCaps(it.name), color: NAVY }], bold: true, fontSize: 9.5, margin: [0, 0, 0, 5] },
         ...it.paras.map((x) => ({ text: x, fontSize: 8.5, margin: [0, 0, 0, 3] })),
       ] };
-      if (!it.img) { content.push({ table: { widths: ['*', 150], body: [[{ ...left, colSpan: 2 }, {}]] }, layout: lay, unbreakable: true, margin: [0, 0, 0, 7] }); continue; }
-      // the photo fills its whole cell: its height follows the estimated height of the text next to it
+      if (!it.img || it.m.category !== 'panels') {
+        const row = it.img ? [left, { image: it.img, fit: [140, 85], alignment: 'center' }] : [{ ...left, colSpan: 2 }, {}];
+        content.push({ table: { widths: ['*', 150], body: [row] }, layout: lay, unbreakable: true, margin: [0, 0, 0, 7] });
+        continue;
+      }
+      // owner: only the panel photo fills its whole cell: its height follows the estimated height of the text next to it
       const lines = (txt, size, cpl) => Math.max(1, Math.ceil(txt.length / cpl)) * size * 1.15 * 1.08;
       const textH = 8 + lines(it.name, 9.5, 62) + 5 + it.paras.reduce((a, x) => a + lines(x, 8.5, 80) + 3, 0);
       const h = Math.min(170, Math.max(80, textH));
