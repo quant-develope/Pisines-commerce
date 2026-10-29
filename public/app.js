@@ -523,9 +523,10 @@ async function buildDoc(o, L = 'el', withSign = false) {
   content.push({ text: FL.title || P.title, fontSize: 20, bold: true, color: NAVY });
   content.push({ text: FL.subtitle ?? subtitle, color: GREY, fontSize: 11, margin: [0, 0, 0, 10] });
   content.push({ table: { widths: [70, '*', 65, '*'], body: [
-    [...kv(P.no, o.no), ...kv(P.date, fmtDate(o.date))],
-    [...kv(P.client, o.client), ...kv(P.phone, o.phone)],
-    [...kv(P.site, o.site), ...kv(P.email, o.email)],
+    // owner: no offer number here (it stays in the page footer)
+    [...kv(P.client, o.client), ...kv(P.date, fmtDate(o.date))],
+    [...kv(P.phone, o.phone), ...kv(P.email, o.email)],
+    [kv(P.site, o.site)[0], { ...kv(P.site, o.site)[1], colSpan: 3 }, {}, {}],
   ] }, layout: lay });
   const d = (n, k = 1) => (EN ? n.toLocaleString('en-GB', { minimumFractionDigits: k, maximumFractionDigits: 2 }) : dec(n, k));
   const mon = (n) => (EN ? (Math.round(n * 100) / 100).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : money(n));
@@ -560,9 +561,9 @@ async function buildDoc(o, L = 'el', withSign = false) {
       }
       // owner: only the panel photo fills its whole cell: its height follows the estimated height of the text next to it
       const lines = (txt, size, cpl) => Math.max(1, Math.ceil(txt.length / cpl)) * size * 1.15 * 1.08;
-      const textH = 14 + lines(it.name, 9.5, 60) + 5 + it.paras.reduce((a, x) => a + lines(x, 8.5, 76) + 3, 0);
+      const textH = 22 + lines(it.name, 9.5, 60) + 5 + it.paras.reduce((a, x) => a + lines(x, 8.5, 76) + 3, 0);
       const h = Math.min(170, Math.max(80, textH));
-      const G = 3; // small gap between the photo and the frame
+      const G = 5.67; // 2 mm gap between the photo and the frame
       const PW = 160 - 2 * G; // same cell edges as the other rows (150 + 2 × 5 padding)
       const pic = await coverImg(it.img, PW, h - 2 * G);
       content.push({ table: { widths: ['*', PW], heights: [h - 2 * G], body: [[{ ...left, margin: [0, 1, 0, 1] }, { image: pic, width: PW, height: h - 2 * G }]] },
