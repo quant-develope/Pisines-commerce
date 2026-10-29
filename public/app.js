@@ -560,11 +560,13 @@ async function buildDoc(o, L = 'el', withSign = false) {
       }
       // owner: only the panel photo fills its whole cell: its height follows the estimated height of the text next to it
       const lines = (txt, size, cpl) => Math.max(1, Math.ceil(txt.length / cpl)) * size * 1.15 * 1.08;
-      const textH = 8 + lines(it.name, 9.5, 62) + 5 + it.paras.reduce((a, x) => a + lines(x, 8.5, 80) + 3, 0);
+      const textH = 14 + lines(it.name, 9.5, 60) + 5 + it.paras.reduce((a, x) => a + lines(x, 8.5, 76) + 3, 0);
       const h = Math.min(170, Math.max(80, textH));
-      const pic = await coverImg(it.img, 150, h);
-      content.push({ table: { widths: ['*', 150], heights: [h], body: [[{ ...left, margin: [0, 4, 0, 4] }, { image: pic, width: 150, height: h }]] },
-        layout: { ...lay, paddingLeft: (i) => (i === 1 ? 0 : 5), paddingRight: (i) => (i === 1 ? 0 : 5), paddingTop: () => 0, paddingBottom: () => 0 },
+      const G = 3; // small gap between the photo and the frame
+      const PW = 160 - 2 * G; // same cell edges as the other rows (150 + 2 × 5 padding)
+      const pic = await coverImg(it.img, PW, h - 2 * G);
+      content.push({ table: { widths: ['*', PW], heights: [h - 2 * G], body: [[{ ...left, margin: [0, 1, 0, 1] }, { image: pic, width: PW, height: h - 2 * G }]] },
+        layout: { ...lay, paddingLeft: (i) => (i === 1 ? G : 5), paddingRight: (i) => (i === 1 ? G : 5), paddingTop: () => G, paddingBottom: () => G },
         unbreakable: true, margin: [0, 0, 0, 7] });
     }
   }
